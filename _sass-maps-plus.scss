@@ -1,0 +1,317 @@
+//  Sass Maps Plus 0.9.5
+//  Advanced map and list-map manipulation for all versions of Sass
+//  by @lunelson
+//  MIT License
+
+//  _ _     _      __                  _   _
+// | (_)   | |    / _|                | | (_)
+// | |_ ___| |_  | |_ _   _ _ __   ___| |_ _  ___  _ __  ___
+// | | / __| __| |  _| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+// | | \__ \ |_  | | | |_| | | | | (__| |_| | (_) | | | \__ \
+// |_|_|___/\__| |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+
+// list-slice(): return a sub-list from a list, 'sliced' from/to given indices
+@function list-slice($list, $start: 1, $end: length($list), $sep: 'comma') {
+  $output: ();
+  @for $i from $start through $end {
+    $output: append($output, nth($list, $i), $sep); }
+  @return $output;
+}
+
+// list-set-nth(): return a list with value at index set/updated to new value
+@function list-set-nth($list, $index, $value, $sep: 'comma') {
+  $length: length($list);
+  $output: ();
+  @if $index > $length or $index <= 0 {
+    @return $list;
+  }
+  @if $index > 1 {
+    @for $i from 1 through $index - 1 {
+      $output: append($output, nth($list, $i), $sep);
+    }
+  }
+  $output: append($output, $value, $sep);
+  @if $length > 1 {
+    @for $i from $index + 1 through $length {
+      $output: append($output, nth($list, $i), $sep);
+    }
+  }
+  @return $output;
+}
+
+// tuple-key(): return the key (first value) from a two-item list
+@function tuple-key($tuple) {
+  @if length($tuple) < 1 { @return null; }
+  @return nth($tuple, 1);
+}
+
+// tuple-value(): return the value (second value) from a two-item list
+@function tuple-value($tuple) {
+  @if length($tuple) < 2 { @return null; }
+  @return nth($tuple, 2);
+}
+
+//              _   _                                      __                  _   _
+//             | | (_)                                    / _|                | | (_)
+//  _ __   __ _| |_ ___   _____   _ __ ___   __ _ _ __   | |_ _   _ _ __   ___| |_ _  ___  _ __  ___
+// | '_ \ / _` | __| \ \ / / _ \ | '_ ` _ \ / _` | '_ \  |  _| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+// | | | | (_| | |_| |\ V /  __/ | | | | | | (_| | |_) | | | | |_| | | | | (__| |_| | (_) | | | \__ \
+// |_| |_|\__,_|\__|_| \_/ \___| |_| |_| |_|\__,_| .__/  |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+//                                               | |
+//                                               |_|
+
+@function map-merge-z($map, $args...) {
+  $arg-length: length($args);
+  $key-length: $arg-length - 1;
+  $value: nth($args, $arg-length);
+  $value-is-map: type-of($value) == 'map';
+  @if $key-length == 0 {
+    $value: map-merge($map, if($value-is-map, $value, ($value: ())));
+  }
+  @else {
+    @for $i from if($value-is-map, 0, 1) through $key-length {
+      $new: if($i == 0, $value, (nth($args, $arg-length - $i): $value));
+      $old: if($i == $key-length, $map, map-get-z($map, slice($args, 1, $key-length - $i)...) or ());
+      $value: if(type-of($old) == 'map', map-merge($old, $new), $new);
+    }
+  }
+  @return $value;
+}
+
+//  _ _     _                                   __                  _   _
+// | (_)   | |                                 / _|                | | (_)
+// | |_ ___| |_ ______ _ __ ___   __ _ _ __   | |_ _   _ _ __   ___| |_ _  ___  _ __  ___
+// | | / __| __|______| '_ ` _ \ / _` | '_ \  |  _| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+// | | \__ \ |_       | | | | | | (_| | |_) | | | | |_| | | | | (__| |_| | (_) | | | \__ \
+// |_|_|___/\__|      |_| |_| |_|\__,_| .__/  |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+//                                    | |
+//                                    |_|
+
+// list-map-check(): return list-map from list; ensure input list-maps are lists-of-lists
+@function list-map-check($list) {
+  @if length($list) == 2 and length(nth($list, 1)) == 1 {
+    @return append((), $list, 'comma');
+  }
+  @return $list;
+}
+
+// list-map-keys(): return comma-separated list of keys from list-map [conformant with rubysass list-map-keys()]
+@function list-map-keys($list...) {
+  $list: if(length($list) == 1, list-map-check($list...), list-map-check($list));
+  $output: ();
+  @each $tuple in $list {
+    $output: append($output, tuple-key($tuple), 'comma');
+  }
+  @return $output;
+}
+
+// list-map-values(): return comma-separated list of values from list-map
+@function list-map-values($list...) {
+  $list: if(length($list) == 1, list-map-check($list...), list-map-check($list));
+  $output: ();
+  @each $tuple in $list {
+    $output: append($output, tuple-value($tuple), 'comma');
+  }
+  @return $output;
+}
+
+// list-map-has-key(): check whether key exists in list-map at root level
+@function list-map-has-key($list, $key) {
+  $list: list-map-check($list);
+  @each $tuple in $list {
+    @if tuple-key($tuple) == $key {
+      @return true;
+    }
+  }
+  @return false;
+}
+
+// list-map-get(): return value corresponding to key in list-map
+@function list-map-get($list, $key) {
+  $list: list-map-check($list);
+  @each $tuple in $list {
+    @if tuple-key($tuple) == $key {
+      @return tuple-value($tuple);
+    }
+  }
+  @return null;
+}
+
+// list-map-merge(): return a merge of second list-map in to first list-map
+@function list-map-merge($list1, $list2) {
+  $list1: list-map-check($list1);
+  $list2: list-map-check($list2);
+  $keys1: list-map-keys($list1);
+  @each $tuple in $list2 {
+    $index: index($keys1, tuple-key($tuple));
+    @if $index { $list1: set-nth($list1, $index, $tuple); }
+    @else { $list1: append($list1, $tuple, 'comma'); }
+  }
+  @return $list1;
+}
+
+// list-map-remove(): return list-map with tuples removed, according to keys (if found)
+@function list-map-remove($list, $keys...) {
+  $list: list-map-check($list);
+  $output: ();
+  @each $tuple in $list {
+    @if index($keys, tuple-key($tuple)) == false {
+      $output: append($output, $tuple, 'comma');
+    }
+  }
+  @return $output;
+}
+
+// list-map-get-z(): a 'deep', nested or chained version of `map-get` (see above); unique
+@function list-map-get-z($list, $keys...) {
+  @each $key in $keys {
+    @if type-of($list) != 'list' { @return $list; }
+    $list: list-map-get($list, $key);
+  }
+  @return $list;
+}
+
+// list-map-merge-z(): a 'deep', nested or chained version of `map-merge`; offers `map-set` syntax too
+@function list-map-merge-z($list, $args...) {
+  $list: list-map-check($list);
+  $arg-length: length($args);
+  $key-length: $arg-length - 1;
+  $value: nth($args, $arg-length);
+  $value-is-list: type-of($value) == 'list';
+  @if $key-length == 0 {
+    $value: list-map-merge($list, if($value-is-list, $value, append((), $value (), 'comma')));
+  }
+  @else {
+    @for $i from if($value-is-list, 0, 1) through $key-length {
+      $new: if($i == 0, $value, append((), nth($args, $arg-length - $i) $value, 'comma'));
+      $old: if($i == $key-length, $list, list-map-get-z($list, slice($args, 1, $key-length - $i)...) or ());
+      $value: if(type-of($old) == 'list', list-map-merge($old, $new), $new);
+    }
+  }
+  @return $value;
+}
+
+// important aliases
+@function l-get($args...) { @return list-map-get-z($args...); }
+@function l-merge($args...) { @return list-map-merge-z($args...); }
+@function l-set($args...) { @return list-map-merge-z($args...); }
+
+// list-map-prev-key(): return previous key from list-map
+@function list-map-prev-key($list, $key) {
+  $list: list-map-check($list);
+  $keys: list-map-keys($list);
+  @return nth($keys, index($keys, $key) - 1);
+}
+
+// list-map-next-key(): return next key from list-map
+@function list-map-next-key($list, $key) {
+  $list: list-map-check($list);
+  $keys: list-map-keys($list);
+  @return nth($keys, index($keys, $key) + 1);
+}
+
+// list-map-inspect(): return the string representation of a list-map
+@function list-map-inspect($list...) {
+  $list: if(length($list) == 1, list-map-check($list...), list-map-check($list));
+  $output: '(';
+  $i: 1;
+  @each $tuple in $list {
+    @if length($tuple) != 2 {
+      $output: $output + '#{$tuple}';
+    }
+    @else {
+      $key: tuple-key($tuple);
+      $value: tuple-value($tuple);
+      $output: $output + '#{$key} ' + if(type-of($value) == 'list', '#{map-inspect($value)}', '#{$value}');
+    }
+    @if $i < length(list-map-keys($list)) {
+      $output: $output + ', ';
+    }
+    $i: $i + 1;
+  }
+  @return $output + ')';
+}
+
+// list-map-pretty(): return the string representation of a list-map with indents and line breaks
+@function list-map-pretty($list, $level: 1) {
+  $tab: '  ';
+  $cr: '
+';
+  $list: if(length($list) == 1, list-map-check($list...), list-map-check($list));
+  $indent: $tab; $outdent: $tab;
+  @for $n from 1 through $level { $indent: $indent + $tab; }
+  @for $n from 1 through $level - 1 { $outdent: $outdent + $tab; }
+  $output: '(' + $cr + $indent;
+  $i: 1;
+  @each $tuple in $list {
+    @if length($tuple) != 2 {
+      $output: $output + '#{$tuple}';
+    }
+    @else {
+      $key: nth($tuple, 1); $value: nth($tuple, 2);
+      @if type-of($value) == 'list' { $output: $output + '#{$key} #{map-pretty($value, $level+1)}'; }
+      @else { $output: $output + '#{$key} #{$value}'; }
+    }
+    @if $i < length(list-map-keys($list)) { $output: $output + ',' + $cr + $indent; }
+    $i: $i + 1;
+  }
+  @return $output + $cr + $outdent + ')';
+}
+
+// list-map-sort(): return sorted list-map, based on values at given key(s)
+$list-map-sort-dir: 'asc'; // global sort dir variable
+@function list-map-sort($list-map, $keys...) {
+  @if length($keys) < 1 { @return $list-map; }
+  $list-map: list-map-check($list-map);
+  @if length($list-map) > 1 {
+    $less: (); $equal: (); $greater: ();
+    $seed: nth($list-map, ceil(length($list-map) / 2));
+    $seed-value: list-map-get-z(nth($seed, 2), $keys...);
+    @each $item in $list-map {
+      $item-value: list-map-get-z(nth($item, 2), $keys...);
+      @if $list-map-sort-dir == 'asc' {
+        @if $item-value == $seed-value { $equal: append($equal, $item, 'comma'); }
+        @else if $item-value < $seed-value { $less: append($less, $item, 'comma'); }
+        @else { $greater: append($greater, $item, 'comma'); }
+      }
+      @else {
+        @if $item-value == $seed-value { $equal: append($equal, $item, 'comma'); }
+        @else if $item-value > $seed-value { $less: append($less, $item, 'comma'); }
+        @else { $greater: append($greater, $item, 'comma'); }
+      }
+    }
+    @return join(join(map-sort($less, $keys...), $equal), list-map-sort($greater, $keys...));
+  }
+  @return $list-map;
+}
+
+// list-map-json(): return json string representation of a list-map
+@function list-map-json($list...) {
+  $list: if(length($list) == 1, list-map-check($list...), list-map-check($list));
+  $output: '{ '; $i: 1;
+  @each $tuple in $list {
+    @if length($tuple) != 2 {
+      $output: $output + '#{$tuple}';
+    }
+    @else {
+      $key: nth($tuple, 1);
+      $value: nth($tuple, 2);
+      @if type-of($value) == 'list' {
+        $output: $output + '"#{$key}": #{map-json($value)}';
+      }
+      @else if type-of($value) == 'number' {
+        $value: if(unitless($value), $value, '"#{$value}"');
+        $output: $output + '"#{$key}": #{$value}';
+      }
+      @else {
+        $value: if(type-of($value) == 'bool', $value, '"#{$value}"');
+        $output: $output + '"#{$key}": #{$value}';
+      }
+    }
+    @if $i < length(list-map-keys($list)) {
+      $output: $output + ', ';
+    }
+    $i: $i + 1;
+  }
+  @return $output + ' }';
+}

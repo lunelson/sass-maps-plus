@@ -1,0 +1,35 @@
+{
+  "name": "sass-maps-plus",
+  "version": "1.0.0",
+  "homepage": "https://github.com/lunelson/sass-maps-plus",
+  "authors": [
+    "Lu Nelson <lunelson@gmail.com>"
+  ],
+  "description": "Advanced map and list-map manipulation for all versions of Sass",
+  "main": "_sass-maps-plus.scss",
+  "keywords": [
+    "libsass",
+    "sass",
+    "map",
+    "maps",
+    "list",
+    "lists",
+    "data"
+  ],
+  "license": "MIT",
+  "ignore": [
+    ".*",
+    "**/.*",
+    "doc*",
+    "lib",
+    "test*",
+    "*.gem*",
+    "sache.json",
+    "gulpfile.js",
+    "node_modules",
+    "bower_components",
+    "sass-hash.jpg",
+    "sass-maps-plus.todo",
+    "sass-maps-plus.sublime-project"
+  ]
+}
