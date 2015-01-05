@@ -9,21 +9,5 @@
   out: 1;
   out: 2;
   out: 3;
-  out: beta 2, gamma 3;
-  out: alpha 1, beta 2, gamma 4;
-  out: alpha 1, beta 2, gamma 4;
-  out: beta gamma 3;
-  out: gamma 3;
-  out: 3;
-  /*
-  map-json
-  */
-  out: '(alpha (beta (gamma 3)))';
-  out: '(
-    alpha (
-      beta (
-        gamma 3
-      )
-    )
-  )';
-  out: '{ "alpha": { "beta": { "gamma": 3 } } }'; }
+  out: (beta: 2, gamma: 3);
+  out: (alpha: 1, beta: 2, gamma: 4); }

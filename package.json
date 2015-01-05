@@ -23,8 +23,13 @@
   },
   "homepage": "https://github.com/lunelson/sass-maps-plus",
   "devDependencies": {
-    "gulp": "^3.8.5",
-    "gulp-sass": "^0.7.2",
-    "gulp-strip-json-comments": "^1.0.1"
+    "gulp": "^3.8.10",
+    "gulp-autoprefixer": "^2.0.0",
+    "gulp-plumber": "^0.6.6",
+    "gulp-rename": "^1.2.0",
+    "gulp-run": "^1.6.5",
+    "gulp-strip-json-comments": "^1.0.2",
+    "gulp-util": "^3.0.1",
+    "vinyl-buffer": "^1.0.0"
   }
 }

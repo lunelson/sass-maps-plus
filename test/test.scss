@@ -1,11 +1,11 @@
-@import "../sass-maps-plus";
+@import "sass-maps-plus";
 
-$list-map: ( alpha 1, beta 2, gamma 3 );
+$list-map: ( alpha: 1, beta: 2, gamma: 3 );
 
 $list-map-z: (
-  alpha (
-    beta (
-      gamma 3
+  alpha: (
+    beta: (
+      gamma: 3
     )
   )
 );
@@ -22,15 +22,15 @@ $list-map-z: (
   out: map-get($list-map, beta); //-> 2
   out: map-get($list-map, gamma); //-> 3
   out: map-remove($list-map, alpha);
-  out: map-merge($list-map, gamma 4);
-  out: map-merge-z($list-map, gamma, 4);
-  out: map-get-z($list-map-z, alpha); // -> ( beta ( gamma 3 ) )
-  out: map-get-z($list-map-z, alpha, beta); // -> ( gamma 3 )
-  out: map-get-z($list-map-z, alpha, beta, gamma); // -> 3
-  /*
-  map-json
-  */
-  out: map-inspect($list-map-z);
-  out: map-pretty($list-map-z);
-  out: map-json($list-map-z);
+  out: map-merge($list-map, (gamma: 4));
+  // out: map-merge-z($list-map, gamma, 4);
+  // out: map-get-z($list-map-z, alpha); // -> ( beta ( gamma 3 ) )
+  // out: map-get-z($list-map-z, alpha, beta); // -> ( gamma 3 )
+  // out: map-get-z($list-map-z, alpha, beta, gamma); // -> 3
+  // /*
+  // map-json
+  // */
+  // out: map-inspect($list-map-z);
+  // out: map-pretty($list-map-z);
+  // out: map-json($list-map-z);
 }
