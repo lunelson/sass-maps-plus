@@ -3,18 +3,23 @@
 //  by @lunelson
 //  MIT License
 
-//  _ _     _      __                  _   _
-// | (_)   | |    / _|                | | (_)
-// | |_ ___| |_  | |_ _   _ _ __   ___| |_ _  ___  _ __  ___
-// | | / __| __| |  _| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
-// | | \__ \ |_  | | | |_| | | | | (__| |_| | (_) | | | \__ \
-// |_|_|___/\__| |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+//  _          _                    __                  _   _
+// | |        | |                  / _|                | | (_)
+// | |__   ___| |_ __   ___ _ __  | |_ _   _ _ __   ___| |_ _  ___  _ __  ___
+// | '_ \ / _ \ | '_ \ / _ \ '__| |  _| | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+// | | | |  __/ | |_) |  __/ |    | | | |_| | | | | (__| |_| | (_) | | | \__ \
+// |_| |_|\___|_| .__/ \___|_|    |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+//              | |
+//              |_|
 
 // list-slice(): return a sub-list from a list, 'sliced' from/to given indices
 @function list-slice($list, $start: 1, $end: length($list), $sep: 'comma') {
   $output: ();
-  @for $i from $start through $end {
-    $output: append($output, nth($list, $i), $sep); }
+  @if $start >= 1 and $end >= $start {
+    @for $i from $start through $end {
+      $output: append($output, nth($list, $i), $sep);
+    }
+  }
   @return $output;
 }
 
@@ -51,6 +56,16 @@
   @return nth($tuple, 2);
 }
 
+// str-multiply(): return input $string printed $n times
+@function str-multiply($string, $n) {
+  $output: ''; @if $n > 0 {
+    @for $i from 1 through $n {
+      $output: $output + $string;
+    }
+  }
+  @return $output;
+}
+
 //              _   _                                      __                  _   _
 //             | | (_)                                    / _|                | | (_)
 //  _ __   __ _| |_ ___   _____   _ __ ___   __ _ _ __   | |_ _   _ _ __   ___| |_ _  ___  _ __  ___
@@ -60,6 +75,16 @@
 //                                               | |
 //                                               |_|
 
+// map-get-z(): a 'deep', nested or chained version of `map-get` (see above); unique
+@function map-get-z($map, $keys...) {
+  @each $key in $keys {
+    @if type-of($map) != 'map' { @return $map; }
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}
+
+// map-merge-z(): a 'deep', nested or chained version of `map-merge`; offers `map-set` syntax too
 @function map-merge-z($map, $args...) {
   $arg-length: length($args);
   $key-length: $arg-length - 1;
@@ -71,11 +96,34 @@
   @else {
     @for $i from if($value-is-map, 0, 1) through $key-length {
       $new: if($i == 0, $value, (nth($args, $arg-length - $i): $value));
-      $old: if($i == $key-length, $map, map-get-z($map, slice($args, 1, $key-length - $i)...) or ());
+      $old: if($i == $key-length, $map, map-get-z($map, list-slice($args, 1, $key-length - $i)...) or ());
       $value: if(type-of($old) == 'map', map-merge($old, $new), $new);
     }
   }
   @return $value;
+}
+
+// ALIASES
+@function get($args...) { @return map-get-z($args...); }
+@function merge($args...) { @return map-merge-z($args...); }
+@function set($args...) { @return map-merge-z($args...); }
+
+// map-inspect(): return pretty-printed string representation of a map
+@function map-inspect($map, $level: 1) {
+$tab: '  ';
+$cr: '
+';
+  @if type-of($map) != 'map' { @return '#{inspect($map)}'; }
+  $indent: str-multiply($tab, $level + 1);
+  $output: '(' + $cr + $indent; $i: 1;
+  @each $key, $value in $map {
+    @if type-of($value) == 'map' { $output: $output + '#{$key}: #{map-inspect($value, $level+1)}'; }
+    @else { $output: $output + '#{$key}: #{$value}'; }
+    @if $i < length(map-keys($map)) { $output: $output + ',' + $cr + $indent; }
+    $i: $i + 1;
+  }
+  $outdent: str-multiply($tab, $level);
+  @return $output + $cr + $outdent + ')';
 }
 
 //  _ _     _                                   __                  _   _
@@ -222,7 +270,7 @@
     @else {
       $key: tuple-key($tuple);
       $value: tuple-value($tuple);
-      $output: $output + '#{$key} ' + if(type-of($value) == 'list', '#{map-inspect($value)}', '#{$value}');
+      $output: $output + '#{$key} ' + if(type-of($value) == 'list', '#{list-map-inspect($value)}', '#{$value}');
     }
     @if $i < length(list-map-keys($list)) {
       $output: $output + ', ';

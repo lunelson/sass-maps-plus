@@ -1,6 +1,8 @@
 .demo {
   /*
+
   basics
+
   */
   out: alpha, beta, gamma;
   out: 1, 2, 3;
@@ -10,4 +12,57 @@
   out: 2;
   out: 3;
   out: (beta: 2, gamma: 3);
-  out: (alpha: 1, beta: 2, gamma: 4); }
+  out: (alpha: 1, beta: 2, gamma: 4);
+  /*
+
+  advanced
+
+  */
+  out: (alpha: 1, beta: 2, gamma: 4);
+  out: (alpha: 1, beta: 2, gamma: 4);
+  out: (alpha: 1, beta: (gamma: (delta: 5)), gamma: 3);
+  out: (beta: (gamma: 3));
+  out: (gamma: 3);
+  out: 3;
+  out: '3'; }
+
+.tests {
+  baseline: (alpha: 1, beta: 2, gamma: 3);
+  out: (alpha: 1, beta: (delta: 3), gamma: 3);
+  out: (alpha: 1, beta: (delta: (gamma: 5)), gamma: 3);
+  out: (alpha: 1, beta: 2, gamma: 3);
+  out: (alpha: 1, beta: 2, gamma: (delta: 3));
+  out: (alpha: (beta: (gamma: five), epsilon: 2, itaca: 'hi'));
+  out: (alpha: (beta: (gamma: delta), epsilon: 2, itaca: 'hi'));
+  out: '(
+    alpha: (
+      beta: (
+        gamma: whaaat
+      ),
+      epsilon: 2,
+      itaca: hi
+    )
+  )'; }
+
+/*
+  COMMENT VERSION
+
+$map: (
+  alpha: 1,
+  beta: 2,
+  gamma: (
+    delta: 4,
+    eta: 5
+  )
+)
+
+*/
+.test {
+  debug: '(
+    alpha: 1,
+    beta: 2,
+    gamma: (
+      delta: 4,
+      eta: 5
+    )
+  )'; }

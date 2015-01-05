@@ -1,0 +1,5 @@
+@function enum($n) {
+  $h: abs($n) % 100; $t: $h % 10;
+  @if $h > 3 and $h < 21 { @return #{$n}th; }
+  @return #{$n}#{if($h == 1, 'st', if($t == 2, 'nd', if($t == 3, 'rd', 'th')))};
+}
