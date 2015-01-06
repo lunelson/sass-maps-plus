@@ -12,8 +12,8 @@
 //              | |
 //              |_|
 
-// list-slice(): return a sub-list from a list, 'sliced' from/to given indices
-@function list-slice($list, $start: 1, $end: length($list), $sep: 'comma') {
+// slice(): return a sub-list from a list, 'sliced' from/to given indices
+@function slice($list, $start: 1, $end: length($list), $sep: 'comma') {
   $output: ();
   @if $start >= 1 and $end >= $start {
     @for $i from $start through $end {
@@ -23,8 +23,8 @@
   @return $output;
 }
 
-// list-set-nth(): return a list with value at index set/updated to new value
-@function list-set-nth($list, $index, $value, $sep: 'comma') {
+// set-nth(): return a list with value at index set/updated to new value
+@function set-nth($list, $index, $value, $sep: 'comma') {
   $length: length($list);
   $output: ();
   @if $index > $length or $index <= 0 {
@@ -96,7 +96,7 @@
   @else {
     @for $i from if($value-is-map, 0, 1) through $key-length {
       $new: if($i == 0, $value, (nth($args, $arg-length - $i): $value));
-      $old: if($i == $key-length, $map, map-get-z($map, list-slice($args, 1, $key-length - $i)...) or ());
+      $old: if($i == $key-length, $map, map-get-z($map, slice($args, 1, $key-length - $i)...) or ());
       $value: if(type-of($old) == 'map', map-merge($old, $new), $new);
     }
   }
@@ -125,6 +125,9 @@ $cr: '
   $outdent: str-multiply($tab, $level);
   @return $output + $cr + $outdent + ')';
 }
+
+// TODO: map-sort, map-prev-key, map-next-key
+// SUGGESTED: map-depth, map-debug, map-change-key-case, map-zip
 
 //  _ _     _                                   __                  _   _
 // | (_)   | |                                 / _|                | | (_)
