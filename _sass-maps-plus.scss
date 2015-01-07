@@ -579,7 +579,7 @@ $map-sort-dir: 'asc';
     } @else {
       $key: nth($tuple, 1); $value: nth($tuple, 2);
       @if type-of($value) == 'list' {
-        $output: $output + '#{$key} #{map-pretty($value, $level+1)}';
+        $output: $output + '#{$key} #{list-map-pretty($value, $level+1)}';
       } @else {
         $output: $output + '#{$key} #{$value}';
       }
@@ -672,7 +672,7 @@ $list-map-sort-dir: 'asc';
       $value: nth($tuple, 2);
 
       @if type-of($value) == 'list' {
-        $output: $output + '"#{$key}": #{map-json($value)}';
+        $output: $output + '"#{$key}": #{list-map-json($value)}';
       } @else if type-of($value) == 'number' {
         $value: if(unitless($value), $value, '"#{$value}"');
         $output: $output + '"#{$key}": #{$value}';
