@@ -1,5 +1,10 @@
 @import "sass-maps-plus";
-@import "beta";
+
+// @import "beta";
+.houston { content: 'no problem'; }
+
+// @import "test/list-maps-basic";
+@import "test/list-maps-advanced";
 
 $list-map: ( alpha: 1, beta: 2, gamma: 3 );
 
@@ -11,104 +16,91 @@ $list-map-z: (
   )
 );
 
-$list: (1 2 3 4 5);
 
-.test--slice {
-  out: slice($list, 2, 4, 'comma');
-}
+// $list: (1 2 3 4 5);
 
-.demo {
-  /*
+// .test--slice {
+//   out: slice($list, 2, 4, 'comma');
+// }
 
-  basics
+// .demo {
+//   /*
 
-  */
-  out: inspect(map-keys($list-map));
-  out: inspect(map-values($list-map));
-  out: inspect(map-has-key($list-map, gamma));
-  out: inspect(map-has-key($list-map, delta));
-  out: inspect(map-get($list-map, alpha));
-  out: inspect(map-get($list-map, beta));
-  out: inspect(map-get($list-map, gamma));
-  out: inspect(map-remove($list-map, alpha));
-  out: inspect(map-merge($list-map, (gamma: 4)));
-  /*
+//   advanced
 
-  advanced
+//   */
+//   out: inspect(map-merge-z($list-map, gamma, 4));
+//   out: inspect(map-merge-z($list-map, (gamma: 4)));
+//   out: inspect(map-merge-z($list-map, beta, gamma, delta, 5));
+//   out: inspect(map-get-z($list-map-z, alpha));
+//   out: inspect(map-get-z($list-map-z, alpha, beta));
+//   out: inspect(map-get-z($list-map-z, alpha, beta, gamma));
+//   out: map-inspect(map-get-z($list-map-z, alpha, beta, gamma));
+//   // /*
+//   // map-json
+//   // */
+//   // out: map-inspect($list-map-z);
+//   // out: map-pretty($list-map-z);
+//   // out: map-json($list-map-z);
+// }
 
-  */
-  out: inspect(map-merge-z($list-map, gamma, 4));
-  out: inspect(map-merge-z($list-map, (gamma: 4)));
-  out: inspect(map-merge-z($list-map, beta, gamma, delta, 5));
-  out: inspect(map-get-z($list-map-z, alpha));
-  out: inspect(map-get-z($list-map-z, alpha, beta));
-  out: inspect(map-get-z($list-map-z, alpha, beta, gamma));
-  out: map-inspect(map-get-z($list-map-z, alpha, beta, gamma));
-  // /*
-  // map-json
-  // */
-  // out: map-inspect($list-map-z);
-  // out: map-pretty($list-map-z);
-  // out: map-json($list-map-z);
-}
+// $test-map: (
+//   alpha: 1,
+//   beta: 2,
+//   gamma: 3
+// );
 
-$test-map: (
-  alpha: 1,
-  beta: 2,
-  gamma: 3
-);
+// $deep-map: (
+//   alpha: (
+//     beta: (
+//       gamma: delta
+//     ),
+//     epsilon: 2,
+//     itaca: 'hi'
+//   )
+// );
 
-$deep-map: (
-  alpha: (
-    beta: (
-      gamma: delta
-    ),
-    epsilon: 2,
-    itaca: 'hi'
-  )
-);
+// // @include merge-debug($test-map, alpha, five, ten, twenty);
+// // @include merge-debug($test-map, (alpha: five));
+// // @include merge-debug($test-map, alpha, (gamma: five));
+// // @include merge-debug($deep-map, alpha, beta, gamma, five);
+// // @include merge-debug($deep-map, alpha, beta, gamma, delta);
+// // @include merge-debug($deep-map, alpha, beta, (gamma: whaaat));
 
-// @include merge-debug($test-map, alpha, five, ten, twenty);
-// @include merge-debug($test-map, (alpha: five));
-// @include merge-debug($test-map, alpha, (gamma: five));
-// @include merge-debug($deep-map, alpha, beta, gamma, five);
-// @include merge-debug($deep-map, alpha, beta, gamma, delta);
-// @include merge-debug($deep-map, alpha, beta, (gamma: whaaat));
-
-.tests {
-  baseline: inspect($test-map);
-  out: inspect(merge($test-map, beta, (delta: 3)));
-  out: inspect(merge($test-map, beta, delta, gamma, 5));
-  out: inspect(merge($test-map, gamma, 3));
-  out: inspect(merge($test-map, gamma, (delta: 3)));
-  out: inspect(merge($deep-map, alpha, beta, gamma, five));
-  out: inspect(merge($deep-map, alpha, beta, gamma, delta));
-  out: map-inspect(merge($deep-map, alpha, beta, (gamma: whaaat)));
-}
+// .tests {
+//   baseline: inspect($test-map);
+//   out: inspect(merge($test-map, beta, (delta: 3)));
+//   out: inspect(merge($test-map, beta, delta, gamma, 5));
+//   out: inspect(merge($test-map, gamma, 3));
+//   out: inspect(merge($test-map, gamma, (delta: 3)));
+//   out: inspect(merge($deep-map, alpha, beta, gamma, five));
+//   out: inspect(merge($deep-map, alpha, beta, gamma, delta));
+//   out: map-inspect(merge($deep-map, alpha, beta, (gamma: whaaat)));
+// }
 
 
 
-// ----
-// Sass (v3.3.14)
-// Compass (v1.0.1)
-// ----
+// // ----
+// // Sass (v3.3.14)
+// // Compass (v1.0.1)
+// // ----
 
-$map: (
-  alpha: 1,
-  beta: 2,
-  gamma: (
-    delta: 4,
-    eta: 5
-  )
-);
+// $map: (
+//   alpha: 1,
+//   beta: 2,
+//   gamma: (
+//     delta: 4,
+//     eta: 5
+//   )
+// );
 
 
-/*
-  COMMENT VERSION
+// /*
+//   COMMENT VERSION
 
-$map: #{map-inspect($map, 0)}
+// $map: #{map-inspect($map, 0)}
 
-*/
-.test {
-  debug: map-inspect($map);
-}
+// */
+// .test {
+//   debug: map-inspect($map);
+// }
