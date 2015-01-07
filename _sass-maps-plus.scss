@@ -13,32 +13,11 @@
 //              |_|
 
 // slice(): return a sub-list from a list, 'sliced' from/to given indices
-@function slice($list, $start: 1, $end: length($list), $sep: 'comma') {
+@function slice($list, $start: 1, $end: length($list), $separator: list-separator($list)) {
   $output: ();
   @if $start >= 1 and $end >= $start {
     @for $i from $start through $end {
-      $output: append($output, nth($list, $i), $sep);
-    }
-  }
-  @return $output;
-}
-
-// set-nth(): return a list with value at index set/updated to new value
-@function set-nth($list, $index, $value, $sep: 'comma') {
-  $length: length($list);
-  $output: ();
-  @if $index > $length or $index <= 0 {
-    @return $list;
-  }
-  @if $index > 1 {
-    @for $i from 1 through $index - 1 {
-      $output: append($output, nth($list, $i), $sep);
-    }
-  }
-  $output: append($output, $value, $sep);
-  @if $length > 1 {
-    @for $i from $index + 1 through $length {
-      $output: append($output, nth($list, $i), $sep);
+      $output: append($output, nth($list, $i), $separator);
     }
   }
   @return $output;
@@ -126,30 +105,31 @@ $cr: '
   @return $output + $cr + $outdent + ')';
 }
 
+// map-subsort() [beta]: sort a map containing sub-maps, based on value at key(s) in sub-map
 $map-sort-dir: 'asc'; // global sort dir variable
-@function map-sort($list-map, $keys...) {
-  @if length($keys) < 1 { @return $list-map; }
-  $list-map: list-map-check($list-map);
-  @if length($list-map) > 1 {
+@function map-subsort($map, $keys...) {
+  @if length($keys) == 0 { @return $map; }
+  @if length($map) > 1 {
     $less: (); $equal: (); $greater: ();
-    $seed: nth($list-map, ceil(length($list-map) / 2));
-    $seed-value: list-map-get-z(nth($seed, 2), $keys...);
-    @each $item in $list-map {
-      $item-value: list-map-get-z(nth($item, 2), $keys...);
-      @if $list-map-sort-dir == 'asc' {
-        @if $item-value == $seed-value { $equal: append($equal, $item, 'comma'); }
-        @else if $item-value < $seed-value { $less: append($less, $item, 'comma'); }
-        @else { $greater: append($greater, $item, 'comma'); }
+    $seed-map: nth(nth($map, ceil(length($map) / 2)), 2);
+    $seed-value: map-get-z($seed-map, $keys...);
+    @each $key, $sub-map in $map {
+      $sub-value: map-get-z($sub-map, $keys...);
+      @if $sub-value == $seed-value { $equal: map-merge($equal, ($key: $sub-map)); }
+      @else if $sub-value < $seed-value {
+        @if $map-sort-dir == 'asc' { $less: map-merge($less, ($key: $sub-map)); }
+        @else { $greater: map-merge($greater, ($key: $sub-map)); }
       }
       @else {
-        @if $item-value == $seed-value { $equal: append($equal, $item, 'comma'); }
-        @else if $item-value > $seed-value { $less: append($less, $item, 'comma'); }
-        @else { $greater: append($greater, $item, 'comma'); }
+        @if $map-sort-dir == 'asc' { $greater: map-merge($greater, ($key: $sub-map)); }
+        @else { $less: map-merge($less, ($key: $sub-map)); }
       }
     }
-    @return join(join(map-sort($less, $keys...), $equal), list-map-sort($greater, $keys...));
+    $less: map-subsort($less, $keys...);
+    $greater: map-subsort($greater, $keys...);
+    @return map-merge(map-merge($less, $equal), $greater);
   }
-  @return $list-map;
+  @return $map;
 }
 
 // TODO: map-sort, map-prev-key, map-next-key
