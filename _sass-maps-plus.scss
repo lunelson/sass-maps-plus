@@ -126,6 +126,32 @@ $cr: '
   @return $output + $cr + $outdent + ')';
 }
 
+$map-sort-dir: 'asc'; // global sort dir variable
+@function map-sort($list-map, $keys...) {
+  @if length($keys) < 1 { @return $list-map; }
+  $list-map: list-map-check($list-map);
+  @if length($list-map) > 1 {
+    $less: (); $equal: (); $greater: ();
+    $seed: nth($list-map, ceil(length($list-map) / 2));
+    $seed-value: list-map-get-z(nth($seed, 2), $keys...);
+    @each $item in $list-map {
+      $item-value: list-map-get-z(nth($item, 2), $keys...);
+      @if $list-map-sort-dir == 'asc' {
+        @if $item-value == $seed-value { $equal: append($equal, $item, 'comma'); }
+        @else if $item-value < $seed-value { $less: append($less, $item, 'comma'); }
+        @else { $greater: append($greater, $item, 'comma'); }
+      }
+      @else {
+        @if $item-value == $seed-value { $equal: append($equal, $item, 'comma'); }
+        @else if $item-value > $seed-value { $less: append($less, $item, 'comma'); }
+        @else { $greater: append($greater, $item, 'comma'); }
+      }
+    }
+    @return join(join(map-sort($less, $keys...), $equal), list-map-sort($greater, $keys...));
+  }
+  @return $list-map;
+}
+
 // TODO: map-sort, map-prev-key, map-next-key
 // SUGGESTED: map-depth, map-debug, map-change-key-case, map-zip
 
