@@ -5,6 +5,11 @@
 ///  MIT License
 ////
 
+
+
+
+
+
 //  _          _                    __                  _   _
 // | |        | |                  / _|                | | (_)
 // | |__   ___| |_ __   ___ _ __  | |_ _   _ _ __   ___| |_ _  ___  _ __  ___
@@ -13,6 +18,11 @@
 // |_| |_|\___|_| .__/ \___|_|    |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //              | |
 //              |_|
+
+
+
+
+
 
 /// Return a sub-list from a list, *sliced* from/to given indices
 /// @access private
@@ -34,6 +44,7 @@
   @return $output;
 }
 
+
 /// Return the key (first value) from a two-item list
 /// @access private
 /// @group helpers
@@ -47,6 +58,7 @@
   @return nth($tuple, 1);
 }
 
+
 /// Return the value (second value) from a two-item list
 /// @access private
 /// @group helpers
@@ -59,6 +71,7 @@
 
   @return nth($tuple, 2);
 }
+
 
 /// Return input `$string` printed `$n` times
 /// @access private
@@ -78,6 +91,11 @@
   @return $output;
 }
 
+
+
+
+
+
 //              _   _                                      __                  _   _
 //             | | (_)                                    / _|                | | (_)
 //  _ __   __ _| |_ ___   _____   _ __ ___   __ _ _ __   | |_ _   _ _ __   ___| |_ _  ___  _ __  ___
@@ -86,6 +104,13 @@
 // |_| |_|\__,_|\__|_| \_/ \___| |_| |_| |_|\__,_| .__/  |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                               | |
 //                                               |_|
+
+// TODO: map-sort, map-prev-key, map-next-key
+// SUGGESTED: map-depth, map-debug, map-change-key-case, map-zip
+
+
+
+
 
 /// A *deep*, nested or chained version of `map-get`
 /// @access public
@@ -104,6 +129,7 @@
 
   @return $map;
 }
+
 
 /// A *deep*, nested or chained version of `map-merge`
 /// that offers `map-set` syntax as well
@@ -133,6 +159,7 @@
   @return $value;
 }
 
+
 /// Getter function
 /// @access public
 /// @group api
@@ -142,6 +169,7 @@
   @return map-get-z($args...);
 }
 
+
 /// Setter function
 /// @access public
 /// @group api
@@ -150,6 +178,7 @@
 @function merge($args...) {
   @return map-merge-z($args...);
 }
+
 
 /// Setter function
 /// @access public
@@ -200,10 +229,12 @@
   @return $output + $cr + $outdent + ')';
 }
 
+
 /// Global sort direction: either `asc` or `desc`
 /// @access public
 /// @group api
 $map-sort-dir: 'asc';
+
 
 /// Sort a map containing sub-maps, based on value at key(s) in sub-map
 /// @param {Map} $map - Map to sort
@@ -251,8 +282,10 @@ $map-sort-dir: 'asc';
   @return $map;
 }
 
-// TODO: map-sort, map-prev-key, map-next-key
-// SUGGESTED: map-depth, map-debug, map-change-key-case, map-zip
+
+
+
+
 
 //  _ _     _                                   __                  _   _
 // | (_)   | |                                 / _|                | | (_)
@@ -262,6 +295,11 @@ $map-sort-dir: 'asc';
 // |_|_|___/\__|      |_| |_| |_|\__,_| .__/  |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
 //                                    | |
 //                                    |_|
+
+
+
+
+
 
 /// Return list-map from `$list` and ensure input list-map is list-of-lists
 /// @access public
@@ -275,6 +313,7 @@ $map-sort-dir: 'asc';
 
   @return $list;
 }
+
 
 /// Return comma-separated list of keys from list-map
 /// Conformant with Ruby Sass `map-keys()`
@@ -295,6 +334,7 @@ $map-sort-dir: 'asc';
   @return $output;
 }
 
+
 /// Return comma-separated list of values from list-map
 /// Conformant with Ruby Sass `map-values()`
 /// @access public
@@ -313,6 +353,7 @@ $map-sort-dir: 'asc';
 
   @return $output;
 }
+
 
 /// Check whether key exists in list-map at root level
 /// Conformant with Ruby Sass `map-has-key()`
@@ -335,6 +376,7 @@ $map-sort-dir: 'asc';
   @return false;
 }
 
+
 /// Return value corresponding to key in list-map
 /// Conformant with Ruby Sass `map-get()`
 /// @access public
@@ -356,6 +398,7 @@ $map-sort-dir: 'asc';
 
   @return null;
 }
+
 
 /// Return a merge of second list-map in to first list-map
 /// Conformant with Ruby Sass `map-merge()`
@@ -385,6 +428,7 @@ $map-sort-dir: 'asc';
   @return $list1;
 }
 
+
 /// Return list-map with tuples removed, according to keys (if found)
 /// @access public
 /// @group list-map
@@ -406,6 +450,7 @@ $map-sort-dir: 'asc';
   @return $output;
 }
 
+
 /// A *deep*, nested or chained version of `map-get()`
 /// @access public
 /// @group list-map
@@ -424,6 +469,7 @@ $map-sort-dir: 'asc';
 
   @return $list;
 }
+
 
 /// A *deep*, nested or chained version of `map-merge`; offers `map-set` syntax too
 /// @access public
@@ -455,6 +501,7 @@ $map-sort-dir: 'asc';
   @return $value;
 }
 
+
 /// List-map getter function
 /// @access public
 /// @group list-map
@@ -464,6 +511,7 @@ $map-sort-dir: 'asc';
   @return list-map-get-z($args...);
 }
 
+
 /// List-map setter function
 /// @access public
 /// @group list-map
@@ -472,6 +520,7 @@ $map-sort-dir: 'asc';
 @function l-merge($args...) {
   @return list-map-merge-z($args...);
 }
+
 
 /// List-map setter function
 /// @access public
@@ -498,6 +547,7 @@ $map-sort-dir: 'asc';
   @return nth($keys, index($keys, $key) - 1);
 }
 
+
 /// Return next key from list-map
 /// @access public
 /// @group list-map
@@ -512,6 +562,7 @@ $map-sort-dir: 'asc';
 
   @return nth($keys, index($keys, $key) + 1);
 }
+
 
 /// Return the string representation of a list-map
 /// @access public
@@ -546,6 +597,7 @@ $map-sort-dir: 'asc';
 
   @return $output + ')';
 }
+
 
 // list-map-pretty(): return the string representation of a list-map with indents and line breaks
 /// Return the string representation of a list-map with indents and line breaks
@@ -651,6 +703,7 @@ $list-map-sort-dir: 'asc';
 
   @return $list-map;
 }
+
 
 /// Return JSON string representation of a list-map
 /// @access public
