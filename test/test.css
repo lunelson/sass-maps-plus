@@ -1,71 +1,57 @@
-.test--slice {
-  out: 2, 3, 4; }
+.houston {
+  content: 'no problem'; }
 
-.demo {
+.list-maps-advanced {
   /*
-
-  basics
-
+  get deeply
   */
-  out: alpha, beta, gamma;
-  out: 1, 2, 3;
-  out: true;
-  out: false;
-  out: 1;
-  out: 2;
-  out: 3;
-  out: (beta: 2, gamma: 3);
-  out: (alpha: 1, beta: 2, gamma: 4);
+  expected: '(beta (gamma 3))';
+  recieved: '(beta (gamma 3))';
+  expected: '(gamma 3)';
+  recieved: '(gamma 3)';
+  expected: '(3)';
+  recieved: '(3)';
   /*
-
-  advanced
-
+  set at existing key
   */
-  out: (alpha: 1, beta: 2, gamma: 4);
-  out: (alpha: 1, beta: 2, gamma: 4);
-  out: (alpha: 1, beta: (gamma: (delta: 5)), gamma: 3);
-  out: (beta: (gamma: 3));
-  out: (gamma: 3);
-  out: 3;
-  out: '3'; }
-
-.tests {
-  baseline: (alpha: 1, beta: 2, gamma: 3);
-  out: (alpha: 1, beta: (delta: 3), gamma: 3);
-  out: (alpha: 1, beta: (delta: (gamma: 5)), gamma: 3);
-  out: (alpha: 1, beta: 2, gamma: 3);
-  out: (alpha: 1, beta: 2, gamma: (delta: 3));
-  out: (alpha: (beta: (gamma: five), epsilon: 2, itaca: 'hi'));
-  out: (alpha: (beta: (gamma: delta), epsilon: 2, itaca: 'hi'));
-  out: '(
-    alpha: (
-      beta: (
-        gamma: whaaat
-      ),
-      epsilon: 2,
-      itaca: hi
-    )
-  )'; }
-
-/*
-  COMMENT VERSION
-
-$map: (
-  alpha: 1,
-  beta: 2,
-  gamma: (
-    delta: 4,
-    eta: 5
-  )
-)
-
-*/
-.test {
-  debug: '(
-    alpha: 1,
-    beta: 2,
-    gamma: (
-      delta: 4,
-      eta: 5
-    )
-  )'; }
+  expected: '(alpha 1, beta 2, gamma 4)';
+  recieved: '(alpha 1, beta 2, gamma 4)';
+  expected: '(alpha 4)';
+  recieved: '(alpha 4)';
+  expected: '(alpha (beta 4))';
+  recieved: '(alpha (beta 4))';
+  expected: '(alpha (beta (gamma 4)))';
+  recieved: '(alpha (beta (gamma 4)))';
+  /*
+  set at non-existent key
+  */
+  expected: '(gamma 4)';
+  recieved: '(gamma 4)';
+  expected: '(gamma (delta 4))';
+  recieved: '(gamma (delta 4))';
+  expected: '(gamma (delta (zeta 4)))';
+  recieved: '(gamma (delta (zeta 4)))';
+  /*
+  merge with existing key
+  */
+  expected: '(alpha 4, beta 2, gamma 3)';
+  recieved: '(alpha 4, beta 2, gamma 3)';
+  expected: '(alpha 1, beta 4, gamma 3)';
+  recieved: '(alpha 1, beta 4, gamma 3)';
+  expected: '(alpha 1, beta 2, gamma 4)';
+  recieved: '(alpha 1, beta 2, gamma 4)';
+  expected: '(alpha 4)';
+  recieved: '(alpha 4)';
+  expected: '(alpha (beta 4))';
+  recieved: '(alpha (beta 4))';
+  expected: '(alpha (beta (gamma 4)))';
+  recieved: '(alpha (beta (gamma 4)))';
+  /*
+  merge at non-existent key
+  */
+  expected: '(gamma 4)';
+  recieved: '(gamma 4)';
+  expected: '(gamma (delta 4))';
+  recieved: '(gamma (delta 4))';
+  expected: '(gamma (delta (zeta 4)))';
+  recieved: '(gamma (delta (zeta 4)))'; }

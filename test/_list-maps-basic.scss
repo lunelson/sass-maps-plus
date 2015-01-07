@@ -1,0 +1,21 @@
+.list-map-basics {
+  /* out: alpha, beta, gamma; */
+  out: inspect(list-map-keys(( alpha 1, beta 2, gamma 3 )));
+  /* out: 1, 2, 3; */
+  out: inspect(list-map-values(( alpha 1, beta 2, gamma 3 )));
+  /* out: true; */
+  out: inspect(list-map-has-key(( alpha 1, beta 2, gamma 3 ), delta));
+  /* out: false; */
+  out: inspect(list-map-has-key(( alpha 1, beta 2, gamma 3 ), gamma));
+  /* out: 1; */
+  out: inspect(list-map-get(( alpha 1, beta 2, gamma 3 ), alpha));
+  /* out: 2; */
+  out: inspect(list-map-get(( alpha 1, beta 2, gamma 3 ), beta));
+  /* out: 3; */
+  out: inspect(list-map-get(( alpha 1, beta 2, gamma 3 ), gamma));
+  /* out: beta 2, gamma 3; */ /* FIX: list-map-remove */
+  out: inspect(list-map-remove(( alpha 1, beta 2, gamma 3 ), alpha));
+  /* out: alpha 1, beta 2, gamma 4; */
+  out: inspect(list-map-merge(( alpha 1, beta 2, gamma 3 ), (gamma 4)));
+
+}

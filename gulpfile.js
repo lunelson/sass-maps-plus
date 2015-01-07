@@ -30,7 +30,7 @@ gulp.task('sassc', function () {
 ///////////
 
 gulp.task('watch', function () {
-  gulp.watch('test/test.scss', ['sassc']);
+  gulp.watch('test/*.scss', ['sassc']);
 });
 
 gulp.task('default', ['sassc', 'watch']);
