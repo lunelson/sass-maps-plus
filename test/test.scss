@@ -1,9 +1,14 @@
 @import "sass-maps-plus";
 
 // @import "beta";
-.houston { content: 'no problem'; }
+.houston {
+  content: 'no problem';
+  // parent: type-of(&);
+  // $parent: #{&};
+  // parent: inspect($parent);
+}
 
-// @import "test/list-maps-basic";
+@import "test/list-maps-basic";
 @import "test/list-maps-advanced";
 
 $list-map: ( alpha: 1, beta: 2, gamma: 3 );

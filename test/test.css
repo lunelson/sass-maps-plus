@@ -1,6 +1,47 @@
 .houston {
   content: 'no problem'; }
 
+.list-map-basics {
+  /*
+  list-map-keys, list-map-values
+  */
+  expected: '(alpha, beta, gamma)';
+  received: '(alpha, beta, gamma)';
+  expected: '(1, 2, 3)';
+  received: '(1, 2, 3)';
+  /*
+  list-map-has-key
+  */
+  expected: '(false)';
+  received: '(false)';
+  expected: '(true)';
+  received: '(true)';
+  /*
+  list-map-get
+  */
+  expected: '(1)';
+  received: '(1)';
+  expected: '(2)';
+  received: '(2)';
+  expected: '(3)';
+  received: '(3)';
+  /*
+  list-map-remove
+  */
+  expected: '(beta 2, gamma 3)';
+  received: '(beta 2, gamma 3)';
+  /*
+  list-map-merge
+  */
+  expected: '(alpha 4, beta 2, gamma 3)';
+  received: '(alpha 4, beta 2, gamma 3)';
+  expected: '(alpha 1, beta 4, gamma 3)';
+  received: '(alpha 1, beta 4, gamma 3)';
+  expected: '(alpha 1, beta 2, gamma 4)';
+  received: '(alpha 1, beta 2, gamma 4)';
+  expected: '(alpha 1, beta 2, gamma 3, delta 4)';
+  received: '(alpha 1, beta 2, gamma 3, delta 4)'; }
+
 .list-maps-advanced {
   /*
   get deeply

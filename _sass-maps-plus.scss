@@ -444,7 +444,7 @@ $map-sort-dir: 'asc';
   $output: ();
 
   @each $tuple in $list {
-    @if index($keys, tuple-key($tuple)) == false {
+    @if not index($keys, tuple-key($tuple)) {
       $output: append($output, $tuple, 'comma');
     }
   }
