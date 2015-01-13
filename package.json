@@ -1,4 +1,5 @@
 {
+  "title": "Sass Maps Plus",
   "name": "sass-maps-plus",
   "version": "0.9.5",
   "description": "Advanced map and list-map manipulation for all versions of Sass",
