@@ -237,6 +237,8 @@ $map-sort-dir: 'asc';
 
 
 /// Sort a map containing sub-maps, based on value at key(s) in sub-map
+/// @access public
+/// @group api
 /// @param {Map} $map - Map to sort
 /// @param {Arglist} $keys - Keys to sort
 /// @return {Map}
@@ -599,7 +601,6 @@ $map-sort-dir: 'asc';
 }
 
 
-// list-map-pretty(): return the string representation of a list-map with indents and line breaks
 /// Return the string representation of a list-map with indents and line breaks
 /// @access public
 /// @group list-map
