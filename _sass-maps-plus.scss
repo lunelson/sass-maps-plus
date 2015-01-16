@@ -28,9 +28,9 @@
 /// @access private
 /// @group helpers
 /// @param {List} $list - List to slice
-/// @param {Number} $start (1) - Start index
-/// @param {Number} $end (length($list)) - End index
-/// @param {String} $separator (list-separator($list)) - List separator
+/// @param {Number} $start [1] - Start index
+/// @param {Number} $end [length($list)] - End index
+/// @param {String} $separator [list-separator($list)] - List separator
 /// @return {List} - Sliced list
 @function slice($list, $start: 1, $end: length($list), $separator: list-separator($list)) {
   $output: ();
@@ -194,7 +194,7 @@
 /// @access public
 /// @group api
 /// @param {Map} $map - Map to inspect
-/// @param {Number} $level (1) - Internal variable, **do not edit**
+/// @param {Number} $level [1] - Internal variable, **do not edit**
 /// @return {String} - String representation of `$map`
 /// @require {function} str-multiply
 /// @require {function} map-inspect
@@ -605,7 +605,7 @@ $map-sort-dir: 'asc';
 /// @access public
 /// @group list-map
 /// @param {List-map} $list - List-map to inspect
-/// @param {Number} $level (1) - Internal variable, **do not edit**
+/// @param {Number} $level [1] - Internal variable, **do not edit**
 /// @require {function} list-map-check
 /// @require {function} list-map-keys
 @function list-map-pretty($list, $level: 1) {
