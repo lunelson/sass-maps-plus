@@ -7,22 +7,25 @@ var plumber        = require('gulp-plumber');
 var rename         = require("gulp-rename");
 var run            = require('gulp-run');
 var strip_comments = require('gulp-strip-json-comments');
+var sass           = require('gulp-sass');
+var sourcemaps     = require('gulp-sourcemaps');
 
-gulp.task('sassc', function () {
-  gulp.src('test/test.scss', { buffer: false })
+gulp.task('sass', function () {
+  gulp.src('./test/*.scss')
     .pipe(plumber(function(err) {
         gutil.beep();
         var errorTxt = err.message +'\n\n'+ err.source;
         gutil.log(gutil.colors.red(errorTxt));
         // fs.writeFile('test.log', errorTxt);
     }))
-    .pipe(run('/applications/libsass/sassc/bin/sassc -s', {verbosity: 1}))
-    .pipe(rename(function (path) { path.extname = ".css"; }))
-    .pipe(buffer())
-    // .pipe(sourcemaps.init())
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+        includePaths: ['./test'],
+        sourceMap: true
+    }))
     .pipe(autoprefixer())
-    // .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('test/'))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest('./test/'));
 });
 
 ///////////
@@ -30,7 +33,7 @@ gulp.task('sassc', function () {
 ///////////
 
 gulp.task('watch', function () {
-  gulp.watch('test/*.scss', ['sassc']);
+  gulp.watch('test/*.scss', ['sass']);
 });
 
-gulp.task('default', ['sassc', 'watch']);
+gulp.task('default', ['sass', 'watch']);

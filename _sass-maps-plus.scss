@@ -26,7 +26,7 @@
 
 /// Return a sub-list from a list, *sliced* from/to given indices
 /// @access private
-/// @group helpers
+/// @group utilities
 /// @param {List} $list - List to slice
 /// @param {Number} $start [1] - Start index
 /// @param {Number} $end [length($list)] - End index
@@ -47,7 +47,7 @@
 
 /// Return the key (first value) from a two-item list
 /// @access private
-/// @group helpers
+/// @group utilities
 /// @param {List} $tuple - Tuple
 /// @return {* | Null} - Key from `$tuple` or `null`
 @function tuple-key($tuple) {
@@ -61,7 +61,7 @@
 
 /// Return the value (second value) from a two-item list
 /// @access private
-/// @group helpers
+/// @group utilities
 /// @param {List} $tuple - Tuple
 /// @return {* | Null} - Value from `$tuple` or `null`
 @function tuple-value($tuple) {
@@ -75,7 +75,7 @@
 
 /// Return input `$string` printed `$n` times
 /// @access private
-/// @group helpers
+/// @group utilities
 /// @param {String} $string - String to repeat
 /// @param {Number} $n - Number of times
 /// @return {String}
@@ -114,7 +114,7 @@
 
 /// A *deep*, nested or chained version of `map-get`
 /// @access public
-/// @group api
+/// @group map
 /// @param {Map} $map - Map
 /// @param {Arglist} $keys - Keys to fetch
 /// @return {*}
@@ -134,7 +134,7 @@
 /// A *deep*, nested or chained version of `map-merge`
 /// that offers `map-set` syntax as well
 /// @access public
-/// @group api
+/// @group map
 /// @param {Map} $map - Map
 /// @param {Arglist} $args - Nested keys
 /// @return {Map} - Updated map
@@ -162,7 +162,7 @@
 
 /// Getter function
 /// @access public
-/// @group api
+/// @group map
 /// @alias map-get-z
 /// @require {function} map-get-z
 @function get($args...) {
@@ -172,7 +172,7 @@
 
 /// Merger function
 /// @access public
-/// @group api
+/// @group map
 /// @alias map-merge-z
 /// @require {function} map-merge-z
 @function merge($args...) {
@@ -182,7 +182,7 @@
 
 /// Setter function
 /// @access public
-/// @group api
+/// @group map
 /// @alias map-merge-z
 /// @require {function} map-merge-z
 @function set($args...) {
@@ -192,7 +192,7 @@
 
 /// Return a pretty-printed string representation of a map
 /// @access public
-/// @group api
+/// @group map
 /// @param {Map} $map - Map to inspect
 /// @param {Number} $level [1] - Internal variable, **do not edit**
 /// @return {String} - String representation of `$map`
@@ -230,59 +230,140 @@
 }
 
 
+/// Collect a list-of-maps or map-of-maps, in to a new list-of-maps or map-of-maps, based on truthiness of value at key(s) in those maps
+/// @access public
+/// @group map-list/map-map
+/// @param {Map|List} $maps - Map of maps, or List of maps, to collect from
+/// @param {Arglist} $keys - Chain of keys to the value that will determine collections
+/// @return {Map|list}
+/// @require {function} map-get-z
+@function maps-collect($maps, $keys...) {
+
+  @if length($keys) == 0 { @return $maps; }
+
+  @if length($maps) == 0 { @return $maps; }
+
+  $collector: ();
+
+  $map-of-maps: type-of($maps) == 'map';
+
+  @if $map-of-maps {
+
+    @each $key, $map in $maps {
+      $curr-value: map-get-z($map, $keys...);
+      @if $curr-value { $collector: map-merge($collector, ($key: $map)); }
+    }
+    @return $collector;
+
+  } @else {
+
+    @each $map in $maps {
+      $curr-value: map-get-z($map, $keys...);
+      @if $curr-value { $collector: append($collector, $map); }
+    }
+    @return $collector;
+
+  }
+}
+
+
 /// Global sort direction: either `asc` or `desc`
 /// @access public
-/// @group api
-$map-sort-dir: 'asc';
+/// @group map-list/map-map
+$maps-sort-dir: 'asc';
 
 
-/// Sort a map containing sub-maps, based on value at key(s) in sub-map
+/// Sort a list-of-maps or map-of-maps, based on value at key(s) in maps
 /// @access public
-/// @group api
-/// @param {Map} $map - Map to sort
-/// @param {Arglist} $keys - Keys to sort
-/// @return {Map}
+/// @group map-list/map-map
+/// @param {Map|List} $maps - Map of maps, or List of maps, to sort
+/// @param {Arglist} $keys - Chain of keys to the value that will be sorted for
+/// @return {Map|List}
 /// @require {function} map-get-z
-@function map-subsort($map, $keys...) {
-  @if length($keys) == 0 {
-    @return $map;
-  }
+@function maps-sort($maps, $keys...) {
 
-  @if length($map) > 1 {
+  @if length($keys) == 0 { @return $maps; }
+
+  @if length($maps) > 1 {
+
     $less: ();
     $equal: ();
     $greater: ();
-    $seed-map: nth(nth($map, ceil(length($map) / 2)), 2);
-    $seed-value: map-get-z($seed-map, $keys...);
 
-    @each $key, $sub-map in $map {
-      $sub-value: map-get-z($sub-map, $keys...);
+    $map-of-maps: type-of($maps) == 'map';
 
-      @if $sub-value == $seed-value {
-        $equal: map-merge($equal, ($key: $sub-map));
-      } @else if $sub-value < $seed-value {
-        @if $map-sort-dir == 'asc' {
-          $less: map-merge($less, ($key: $sub-map));
+    @if $map-of-maps {
+
+      $seed-map: nth(nth($maps, ceil(length($maps) / 2)), 2);
+
+      $seed-value: map-get-z($seed-map, $keys...);
+
+      // TODO: add code to handle case of non-number values (warn and return $maps)
+
+      @each $key, $map in $maps {
+
+        $curr-value: map-get-z($map, $keys...);
+
+        @if $curr-value == $seed-value {
+          $equal: map-merge($equal, ($key: $map));
+        } @else if $curr-value < $seed-value {
+          @if $maps-sort-dir == 'asc' {
+            $less: map-merge($less, ($key: $map));
+          } @else {
+            $greater: map-merge($greater, ($key: $map));
+          }
         } @else {
-          $greater: map-merge($greater, ($key: $sub-map));
-        }
-      } @else {
-        @if $map-sort-dir == 'asc' {
-          $greater: map-merge($greater, ($key: $sub-map));
-        } @else {
-          $less: map-merge($less, ($key: $sub-map));
+          @if $maps-sort-dir == 'asc' {
+            $greater: map-merge($greater, ($key: $map));
+          } @else {
+            $less: map-merge($less, ($key: $map));
+          }
         }
       }
+
+      $less: maps-sort($less, $keys...);
+      $greater: maps-sort($greater, $keys...);
+
+      @return map-merge(map-merge($less, $equal), $greater);
+
+    } @else {
+
+      $seed-map: nth($maps, ceil(length($maps) / 2));
+
+      $seed-value: map-get-z($seed-map, $keys...);
+
+      @each $map in $maps {
+
+        $curr-value: map-get-z($map, $keys...);
+
+        @if $curr-value == $seed-value {
+          $equal: append($equal, $map);
+        } @else if $curr-value < $seed-value {
+          @if $maps-sort-dir == 'asc' {
+            $less: append($less, $map);
+          } @else {
+            $greater: append($greater, $map);
+          }
+        } @else {
+          @if $maps-sort-dir == 'asc' {
+            $greater: append($greater, $map);
+          } @else {
+            $less: append($less, $map);
+          }
+        }
+      }
+
+      $less: maps-sort($less, $keys...);
+      $greater: maps-sort($greater, $keys...);
+
+      @return join(join($less, $equal), $greater);
+
     }
-
-    $less: map-subsort($less, $keys...);
-    $greater: map-subsort($greater, $keys...);
-
-    @return map-merge(map-merge($less, $equal), $greater);
   }
 
-  @return $map;
+  @return $maps;
 }
+
 
 
 

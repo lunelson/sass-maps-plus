@@ -1,194 +1,38 @@
 .houston {
   content: 'no problem'; }
 
-.list-map-basics {
-  /*
-  list-map-keys, list-map-values
-  */
-  expected: '(alpha, beta, gamma)';
-  received: '(alpha, beta, gamma)';
-  expected: '(1, 2, 3)';
-  received: '(1, 2, 3)';
-  /*
-  list-map-has-key
-  */
-  expected: '(false)';
-  received: '(false)';
-  expected: '(true)';
-  received: '(true)';
-  /*
-  list-map-get
-  */
-  expected: '(1)';
-  received: '(1)';
-  expected: '(2)';
-  received: '(2)';
-  expected: '(3)';
-  received: '(3)';
-  /*
-  list-map-remove
-  */
-  expected: '(beta 2, gamma 3)';
-  received: '(beta 2, gamma 3)';
-  /*
-  list-map-merge
-  */
-  expected: '(alpha 4, beta 2, gamma 3)';
-  received: '(alpha 4, beta 2, gamma 3)';
-  expected: '(alpha 1, beta 4, gamma 3)';
-  received: '(alpha 1, beta 4, gamma 3)';
-  expected: '(alpha 1, beta 2, gamma 4)';
-  received: '(alpha 1, beta 2, gamma 4)';
-  expected: '(alpha 1, beta 2, gamma 3, delta 4)';
-  received: '(alpha 1, beta 2, gamma 3, delta 4)'; }
+.maps-test {
+  sort-map-map: '(
+    alpha: (
+      min-width: 20em
+    ),
+    beta: (
+      min-width: 30em,
+      test: hello
+    ),
+    gamma: (
+      min-width: 48em
+    ),
+    delta: (
+      min-width: 64em,
+      test: world
+    ),
+    epsilon: (
+      min-width: 80em
+    )
+  )';
+  sort-map-list: '(min-width: 20em) (min-width: 30em) (min-width: 48em, test: 'hello') (min-width: 64em) (min-width: 80em, test: 'world')';
+  collect-map-map: '(
+    beta: (
+      min-width: 30em,
+      test: hello
+    ),
+    delta: (
+      min-width: 64em,
+      test: world
+    )
+  )';
+  collect-map-list: '(min-width: 48em, test: 'hello') (min-width: 80em, test: 'world')'; }
 
-.list-maps-advanced {
-  /*
-  get deeply
-  */
-  expected: '(beta (gamma 3))';
-  recieved: '(beta (gamma 3))';
-  expected: '(gamma 3)';
-  recieved: '(gamma 3)';
-  expected: '(3)';
-  recieved: '(3)';
-  /*
-  set at existing key
-  */
-  expected: '(alpha 1, beta 2, gamma 4)';
-  recieved: '(alpha 1, beta 2, gamma 4)';
-  expected: '(alpha 4)';
-  recieved: '(alpha 4)';
-  expected: '(alpha (beta 4))';
-  recieved: '(alpha (beta 4))';
-  expected: '(alpha (beta (gamma 4)))';
-  recieved: '(alpha (beta (gamma 4)))';
-  /*
-  set at non-existent key
-  */
-  expected: '(gamma 4)';
-  recieved: '(gamma 4)';
-  expected: '(gamma (delta 4))';
-  recieved: '(gamma (delta 4))';
-  expected: '(gamma (delta (zeta 4)))';
-  recieved: '(gamma (delta (zeta 4)))';
-  /*
-  merge with existing key
-  */
-  expected: '(alpha 4, beta 2, gamma 3)';
-  recieved: '(alpha 4, beta 2, gamma 3)';
-  expected: '(alpha 1, beta 4, gamma 3)';
-  recieved: '(alpha 1, beta 4, gamma 3)';
-  expected: '(alpha 1, beta 2, gamma 4)';
-  recieved: '(alpha 1, beta 2, gamma 4)';
-  expected: '(alpha 4)';
-  recieved: '(alpha 4)';
-  expected: '(alpha (beta 4))';
-  recieved: '(alpha (beta 4))';
-  expected: '(alpha (beta (gamma 4)))';
-  recieved: '(alpha (beta (gamma 4)))';
-  /*
-  merge at non-existent key
-  */
-  expected: '(gamma 4)';
-  recieved: '(gamma 4)';
-  expected: '(gamma (delta 4))';
-  recieved: '(gamma (delta 4))';
-  expected: '(gamma (delta (zeta 4)))';
-  recieved: '(gamma (delta (zeta 4)))'; }
 
-.map-basics {
-  /*
-  map-keys, map-values
-  */
-  expected: alpha, beta, gamma;
-  received: alpha, beta, gamma;
-  expected: 1, 2, 3;
-  received: 1, 2, 3;
-  /*
-  map-has-key
-  */
-  expected: false;
-  received: false;
-  expected: true;
-  received: true;
-  /*
-  map-get
-  */
-  expected: 1;
-  received: 1;
-  expected: 2;
-  received: 2;
-  expected: 3;
-  received: 3;
-  /*
-  map-remove
-  */
-  expected: (beta: 2, gamma: 3);
-  received: (beta: 2, gamma: 3);
-  /*
-  map-merge
-  */
-  expected: (alpha: 4, beta: 2, gamma: 3);
-  received: (alpha: 4, beta: 2, gamma: 3);
-  expected: (alpha: 1, beta: 4, gamma: 3);
-  received: (alpha: 1, beta: 4, gamma: 3);
-  expected: (alpha: 1, beta: 2, gamma: 4);
-  received: (alpha: 1, beta: 2, gamma: 4);
-  expected: (alpha: 1, beta: 2, gamma: 3, delta: 4);
-  received: (alpha: 1, beta: 2, gamma: 3, delta: 4); }
-
-.maps-advanced {
-  /*
-  get deeply
-  */
-  expected: '(beta: (gamma: 3))';
-  recieved: '(beta: (gamma: 3))';
-  expected: '(gamma: 3)';
-  recieved: '(gamma: 3)';
-  expected: '3';
-  recieved: '3';
-  /*
-  set at existing key
-  */
-  expected: '(alpha: 1, beta: 2, gamma: 4)';
-  recieved: '(alpha: 1, beta: 2, gamma: 4)';
-  expected: '(alpha: 4)';
-  recieved: '(alpha: 4)';
-  expected: '(alpha: (beta: 4))';
-  recieved: '(alpha: (beta: 4))';
-  expected: '(alpha: (beta: (gamma: 4)))';
-  recieved: '(alpha: (beta: (gamma: 4)))';
-  /*
-  set at non-existent key
-  */
-  expected: '(gamma: 4)';
-  recieved: '(gamma: 4)';
-  expected: '(gamma: (delta: 4))';
-  recieved: '(gamma: (delta: 4))';
-  expected: '(gamma: (delta: (zeta: 4)))';
-  recieved: '(gamma: (delta: (zeta: 4)))';
-  /*
-  merge with existing key
-  */
-  expected: '(alpha: 4, beta: 2, gamma: 3)';
-  recieved: '(alpha: 4, beta: 2, gamma: 3)';
-  expected: '(alpha: 1, beta: 4, gamma: 3)';
-  recieved: '(alpha: 1, beta: 4, gamma: 3)';
-  expected: '(alpha: 1, beta: 2, gamma: 4)';
-  recieved: '(alpha: 1, beta: 2, gamma: 4)';
-  expected: '(alpha: 4)';
-  recieved: '(alpha: 4)';
-  expected: '(alpha: (beta: 4))';
-  recieved: '(alpha: (beta: 4))';
-  expected: '(alpha: (beta: (gamma: 4)))';
-  recieved: '(alpha: (beta: (gamma: 4)))';
-  /*
-  merge at non-existent key
-  */
-  expected: '(gamma: 4)';
-  recieved: '(gamma: 4)';
-  expected: '(gamma (delta: 4))';
-  recieved: '(gamma: (delta: 4))';
-  expected: '(gamma (delta (zeta: 4)))';
-  recieved: '(gamma: (delta: (zeta: 4)))'; }
+/*# sourceMappingURL=test.css.map */
