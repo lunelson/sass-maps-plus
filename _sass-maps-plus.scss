@@ -93,6 +93,34 @@
 //                 | |
 //                 |_|
 
+/// Return previous key from map, given $key
+/// @access public
+/// @group maps
+/// @param {Map} $map - Map
+/// @param {*} $key - Pivot key
+/// @return {*}
+/// @require {function} map-keys
+@function map-prev-key($map, $key) {
+  $keys: map-keys($map);
+  $index: index($keys, $key) - 1;
+  @return if($index >= 1, nth($keys, $index), null);
+}
+
+
+/// Return next key from map, given $key
+/// @access public
+/// @group maps
+/// @param {Map} $map - Map
+/// @param {*} $key - Pivot key
+/// @return {*}
+/// @require {function} map-keys
+@function map-next-key($map, $key) {
+  $keys: map-keys($map);
+  $index: index($keys, $key) + 1;
+  @return if($index <= length($keys), nth($keys, $index), null);
+}
+
+
 /// get all values from $map for keys in $keys list
 /// @access public
 /// @group maps
