@@ -1,0 +1,149 @@
+//                                                              __                              _ _     _
+//                                                             / /                             | (_)   | |
+//  _ __ ___   __ _ _ __ ______ _ __ ___   __ _ _ __  ___     / /   _ __ ___   __ _ _ __ ______| |_ ___| |_ ___
+// | '_ ` _ \ / _` | '_ \______| '_ ` _ \ / _` | '_ \/ __|   / /   | '_ ` _ \ / _` | '_ \______| | / __| __/ __|
+// | | | | | | (_| | |_) |     | | | | | | (_| | |_) \__ \  / /    | | | | | | (_| | |_) |     | | \__ \ |_\__ \
+// |_| |_| |_|\__,_| .__/      |_| |_| |_|\__,_| .__/|___/ /_/     |_| |_| |_|\__,_| .__/      |_|_|___/\__|___/
+//                 | |                         | |                                 | |
+//                 |_|                         |_|                                 |_|
+
+/// Collect a list-of-maps or map-of-maps, in to a new list-of-maps or map-of-maps, based on truthiness of value at key(s) in those maps
+/// @access public
+/// @group map-lists/map-maps
+/// @param {Map|List} $maps - Map of maps, or List of maps, to collect from
+/// @param {Arglist} $keys - Chain of keys to the value that will determine collections
+/// @return {Map|list}
+/// @require {function} map-get-nested
+@function maps-collect($maps, $keys...) {
+
+  @if length($keys) == 0 { @return $maps; }
+
+  @if length($maps) == 0 { @return $maps; }
+
+  $collector: ();
+
+  $map-of-maps: type-of($maps) == 'map';
+
+  @if $map-of-maps {
+
+    @each $key, $map in $maps {
+      $curr-value: map-get-nested($map, $keys...);
+      @if $curr-value { $collector: map-merge($collector, ($key: $map)); }
+    }
+    @return $collector;
+
+  } @else {
+
+    @each $map in $maps {
+      $curr-value: map-get-nested($map, $keys...);
+      @if $curr-value { $collector: append($collector, $map); }
+    }
+    @return $collector;
+
+  }
+}
+
+
+/// Global sort direction: either `asc` or `desc`
+/// @access public
+/// @group map-lists/map-maps
+$maps-sort-dir: 'asc';
+
+
+/// Sort a list-of-maps or map-of-maps, based on value at key(s) in maps
+/// @access public
+/// @group map-lists/map-maps
+/// @param {Map|List} $maps - Map of maps, or List of maps, to sort
+/// @param {Arglist} $keys - Chain of keys to the value that will be sorted for
+/// @return {Map|List}
+/// @require {function} map-get-nested
+@function maps-sort($maps, $keys...) {
+
+  @if length($keys) == 0 { @return $maps; }
+
+  @if length($maps) > 1 {
+
+    $less: ();
+    $equal: ();
+    $greater: ();
+
+    $map-of-maps: type-of($maps) == 'map';
+
+    @if $map-of-maps {
+
+      $seed-map: nth(nth($maps, ceil(length($maps) / 2)), 2);
+
+      $seed-value: map-get-nested($seed-map, $keys...);
+
+      // TODO: add code to handle case of non-number values (warn and return $maps)
+
+      @each $key, $map in $maps {
+
+        $curr-value: map-get-nested($map, $keys...);
+
+        @if $curr-value == $seed-value {
+          $equal: map-merge($equal, ($key: $map));
+        } @else if $curr-value < $seed-value {
+          @if $maps-sort-dir == 'asc' {
+            $less: map-merge($less, ($key: $map));
+          } @else {
+            $greater: map-merge($greater, ($key: $map));
+          }
+        } @else {
+          @if $maps-sort-dir == 'asc' {
+            $greater: map-merge($greater, ($key: $map));
+          } @else {
+            $less: map-merge($less, ($key: $map));
+          }
+        }
+      }
+
+      $less: maps-sort($less, $keys...);
+      $greater: maps-sort($greater, $keys...);
+
+      @return map-merge(map-merge($less, $equal), $greater);
+
+    } @else {
+
+      $seed-map: nth($maps, ceil(length($maps) / 2));
+
+      $seed-value: map-get-nested($seed-map, $keys...);
+
+      @each $map in $maps {
+
+        $curr-value: map-get-nested($map, $keys...);
+
+        @if $curr-value == $seed-value {
+          $equal: append($equal, $map);
+        } @else if $curr-value < $seed-value {
+          @if $maps-sort-dir == 'asc' {
+            $less: append($less, $map);
+          } @else {
+            $greater: append($greater, $map);
+          }
+        } @else {
+          @if $maps-sort-dir == 'asc' {
+            $greater: append($greater, $map);
+          } @else {
+            $less: append($less, $map);
+          }
+        }
+      }
+
+      $less: maps-sort($less, $keys...);
+      $greater: maps-sort($greater, $keys...);
+
+      @return join(join($less, $equal), $greater);
+
+    }
+  }
+
+  @return $maps;
+}
+
+
+
+
+
+
+

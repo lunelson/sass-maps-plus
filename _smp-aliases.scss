@@ -1,0 +1,115 @@
+//        _ _
+//       | (_)
+//   __ _| |_  __ _ ___  ___  ___
+//  / _` | | |/ _` / __|/ _ \/ __|
+// | (_| | | | (_| \__ \  __/\__ \
+//  \__,_|_|_|\__,_|___/\___||___/
+
+/////////
+// GET //
+/////////
+
+/// 'z' nested-getter function alias
+/// @access public
+/// @group aliases
+/// @alias map-get-nested
+/// @require {function} map-get-nested
+@function map-get-z($args...) { @return map-get-nested($args...); }
+
+/// 'deep' nested-getter function alias
+/// @access public
+/// @group aliases
+/// @alias map-get-nested
+/// @require {function} map-get-nested
+@function map-get-deep($args...) { @return map-get-nested($args...); }
+
+/// universal [nested-]getter function alias (any depth)
+/// @access public
+/// @group aliases
+/// @alias map-get-nested
+/// @require {function} map-get-nested
+@function get($args...) { @return map-get-nested($args...); }
+
+///////////
+// MERGE //
+///////////
+
+/// 'z' nested-merger function alias
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function map-merge-z($args...) { @return map-merge-nested($args...); }
+
+/// 'deep' nested-merger function alias
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function map-merge-deep($args...) { @return map-merge-nested($args...); }
+
+/// universal [nested-]merger function alias (any depth)
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function merge($args...) { @return map-merge-nested($args...); }
+
+/////////
+// SET //
+/////////
+
+/// nested-setter function alias
+/// @access public
+/// @group maps
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function map-set-nested($args...) { @return map-merge-nested($args...); }
+
+/// 'z' nested-setter function alias
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function map-set-z($args...) { @return map-merge-nested($args...); }
+
+/// 'deep' nested-setter function alias
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function map-set-deep($args...) { @return map-merge-nested($args...); }
+
+/// universal [nested-]setter function alias (any depth)
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function set($args...) { @return map-merge-nested($args...); }
+
+//////////////
+// LISTMAPS //
+//////////////
+
+/// List-map getter function
+/// @access public
+/// @group aliases
+/// @alias list-map-get-nested
+/// @require {function} list-map-get-nested
+@function list-get($args...) { @return list-map-get-nested($args...); }
+
+
+/// List-map setter function
+/// @access public
+/// @group aliases
+/// @alias list-map-merge-nested
+/// @require {function} list-map-merge-nested
+@function list-merge($args...) { @return list-map-merge-nested($args...); }
+
+
+/// List-map setter function
+/// @access public
+/// @group aliases
+/// @alias list-map-merge-nested
+/// @require {function} list-map-merge-nested
+@function list-set($args...) { @return list-map-merge-nested($args...); }

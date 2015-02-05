@@ -1,0 +1,120 @@
+//  _ __ ___   __ _ _ __  ___
+// | '_ ` _ \ / _` | '_ \/ __|
+// | | | | | | (_| | |_) \__ \
+// |_| |_| |_|\__,_| .__/|___/
+//                 | |
+//                 |_|
+
+/// get all values from $map for keys in $keys list
+/// @access public
+/// @group maps
+/// @param {Map} $map - map
+/// @param {Arglist} $keys - keys to get
+/// @return {*}
+@function map-get-all($map, $keys...) {
+  $out:();
+  @each $key in $keys {
+    $value: map-get($map, $key);
+    $out: if($value, append($out, $value), $out);
+  }
+  @return if($out != (), $out, null);
+}
+
+/// get first value from $map for keys in $keys list
+/// @access public
+/// @group maps
+/// @param {Map} $map - map
+/// @param {Arglist} $keys - keys to get
+/// @return {*}
+@function map-get-any($map, $keys...) {
+  @each $key in $keys {
+    $value: map-get($map, $key);
+    @if $value { @return $value; }
+  }
+  @return null;
+}
+
+/// get value at nested or 'deep' key, per $keys list
+/// @access public
+/// @group maps
+/// @param {Map} $map - map
+/// @param {Arglist} $keys - nested keys
+/// @return {*}
+@function map-get-nested($map, $keys...) {
+  @each $key in $keys {
+    @if type-of($map) != 'map' {
+      @return $map;
+    }
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}
+
+/// merge $value to $map at nested or 'deep' $key, per $kv list
+/// (works in merge- or set-style syntax)
+/// @access public
+/// @group maps
+/// @param {Map} $map - target map
+/// @param {Arglist} $kv - keys and map (map is final item in list)
+/// @return {Map} - Updated map
+/// @require {function} slice
+/// @require {function} map-get-nested
+@function map-merge-nested($map, $keys-and-value...) {
+  $keys-and-value-length: length($keys-and-value);
+  $key-length: $keys-and-value-length - 1;
+  $value: nth($keys-and-value, $keys-and-value-length);
+  $value-is-map: type-of($value) == 'map';
+
+  @if $key-length == 0 {
+    $value: map-merge($map, if($value-is-map or length($value) == 0, $value, ($value: ())));
+  } @else {
+    @for $i from if($value-is-map, 0, 1) through $key-length {
+      $new: if($i == 0, $value, (nth($keys-and-value, $keys-and-value-length - $i): $value));
+      $old: if($i == $key-length, $map, map-get-nested($map, slice($keys-and-value, 1, $key-length - $i)...) or ());
+      $value: if(type-of($old) == 'map', map-merge($old, $new), $new);
+    }
+  }
+
+  @return $value;
+}
+
+/// return a pretty-printed string representation of a map
+/// @access public
+/// @group maps
+/// @param {Map} $map - Map to inspect
+/// @param {Number} $level [1] - Internal variable, **do not edit**
+/// @return {String} - String representation of `$map`
+/// @require {function} str-multiply
+/// @require {function} map-inspect
+@function map-inspect($map, $level: 1) {
+  $tab: '  ';
+  $cr: '
+';
+
+  @if type-of($map) != 'map' {
+    @return '#{inspect($map)}';
+  }
+
+  $indent: str-multiply($tab, $level + 1);
+  $output: '(' + $cr + $indent; $i: 1;
+
+  @each $key, $value in $map {
+    @if type-of($value) == 'map' {
+      $output: $output + '#{$key}: #{map-inspect($value, $level+1)}';
+    } @else {
+      $output: $output + '#{$key}: #{$value}';
+    }
+
+    @if $i < length(map-keys($map)) {
+      $output: $output + ',' + $cr + $indent;
+    }
+
+    $i: $i + 1;
+  }
+
+  $outdent: str-multiply($tab, $level);
+
+  @return $output + $cr + $outdent + ')';
+}
+
+
