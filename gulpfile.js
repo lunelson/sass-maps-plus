@@ -9,8 +9,22 @@ var run            = require('gulp-run');
 var strip_comments = require('gulp-strip-json-comments');
 var sass           = require('gulp-sass');
 var sourcemaps     = require('gulp-sourcemaps');
+var concat = require('gulp-concat');
 
-gulp.task('sass', function () {
+gulp.task('build',[], function() {
+    gulp.src([
+        './stylesheets/_smp-header.scss',
+        './stylesheets/_smp-utils.scss',
+        './stylesheets/_smp-maps.scss',
+        './stylesheets/_smp-mapmaps.scss',
+        './stylesheets/_smp-listmaps.scss',
+        './stylesheets/_smp-aliases.scss'
+        ])
+        .pipe(concat('_sass-maps-plus.scss'))
+        .pipe(gulp.dest('.'));
+});
+
+gulp.task('test', function () {
   gulp.src('./test/*.scss')
     .pipe(plumber(function(err) {
         gutil.beep();
@@ -33,7 +47,7 @@ gulp.task('sass', function () {
 ///////////
 
 gulp.task('watch', function () {
-  gulp.watch('test/*.scss', ['sass']);
+  gulp.watch('test/*.scss', ['test']);
 });
 
-gulp.task('default', ['sass', 'watch']);
+gulp.task('default', ['test', 'watch']);

@@ -26,6 +26,7 @@
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-autoprefixer": "^2.0.0",
+    "gulp-concat": "^2.4.3",
     "gulp-plumber": "^0.6.6",
     "gulp-rename": "^1.2.0",
     "gulp-run": "^1.6.5",
