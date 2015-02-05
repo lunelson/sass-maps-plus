@@ -6,6 +6,7 @@ These functions are under development. They are the successor to my [Sass Listâ€
 
 #### Updates
 
+* 0.9.2 -- break apart files in to partials, fix empty-argument edge case for nested merging.
 * 0.9.0 -- working `map-get-z()`, `map-merge-z()`, and `map-inspect()` functions for native maps.
 
 TODO: more.
