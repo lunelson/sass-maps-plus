@@ -59,18 +59,18 @@
 /// @return {Map} - Updated map
 /// @require {function} slice
 /// @require {function} map-get-nested
-@function map-merge-nested($map, $kv...) {
-  $kv-length: length($kv);
-  $key-length: $kv-length - 1;
-  $value: nth($kv, $kv-length);
+@function map-merge-nested($map, $keys-and-value...) {
+  $keys-and-value-length: length($keys-and-value);
+  $key-length: $keys-and-value-length - 1;
+  $value: nth($keys-and-value, $keys-and-value-length);
   $value-is-map: type-of($value) == 'map';
 
   @if $key-length == 0 {
-    $value: map-merge($map, if($value-is-map, $value, ($value: ())));
+    $value: map-merge($map, if($value-is-map or length($value) == 0, $value, ($value: ())));
   } @else {
     @for $i from if($value-is-map, 0, 1) through $key-length {
-      $new: if($i == 0, $value, (nth($kv, $kv-length - $i): $value));
-      $old: if($i == $key-length, $map, map-get-nested($map, slice($kv, 1, $key-length - $i)...) or ());
+      $new: if($i == 0, $value, (nth($keys-and-value, $keys-and-value-length - $i): $value));
+      $old: if($i == $key-length, $map, map-get-nested($map, slice($keys-and-value, 1, $key-length - $i)...) or ());
       $value: if(type-of($old) == 'map', map-merge($old, $new), $new);
     }
   }
