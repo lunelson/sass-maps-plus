@@ -11,6 +11,81 @@
 ///  MIT License
 ///  @author Lu Nelson
 
+//        _   _ _ _ _   _
+//       | | (_) (_) | (_)
+//  _   _| |_ _| |_| |_ _  ___  ___
+// | | | | __| | | | __| |/ _ \/ __|
+// | |_| | |_| | | | |_| |  __/\__ \
+//  \__,_|\__|_|_|_|\__|_|\___||___/
+
+/// Return a sub-list from a list, *sliced* from/to given indices
+/// @access private
+/// @group utilities
+/// @param {List} $list - List to slice
+/// @param {Number} $start [1] - Start index
+/// @param {Number} $end [length($list)] - End index
+/// @param {String} $separator [list-separator($list)] - List separator
+/// @return {List} - Sliced list
+@function slice($list, $start: 1, $end: length($list), $separator: list-separator($list)) {
+  $output: ();
+
+  @if $start >= 1 and $end >= $start {
+    @for $i from $start through $end {
+      $output: append($output, nth($list, $i), $separator);
+    }
+  }
+
+  @return $output;
+}
+
+
+/// Return the key (first value) from a two-item list
+/// @access private
+/// @group utilities
+/// @param {List} $tuple - Tuple
+/// @return {* | Null} - Key from `$tuple` or `null`
+@function tuple-key($tuple) {
+  @if length($tuple) < 1 {
+    @return null;
+  }
+
+  @return nth($tuple, 1);
+}
+
+
+/// Return the value (second value) from a two-item list
+/// @access private
+/// @group utilities
+/// @param {List} $tuple - Tuple
+/// @return {* | Null} - Value from `$tuple` or `null`
+@function tuple-value($tuple) {
+  @if length($tuple) < 2 {
+    @return null;
+  }
+
+  @return nth($tuple, 2);
+}
+
+
+/// Return input `$string` printed `$n` times
+/// @access private
+/// @group utilities
+/// @param {String} $string - String to repeat
+/// @param {Number} $n - Number of times
+/// @return {String}
+@function str-multiply($string, $n) {
+  $output: '';
+
+  @if $n > 0 {
+    @for $i from 1 through $n {
+      $output: $output + $string;
+    }
+  }
+
+  @return $output;
+}
+
+
 //  _ __ ___   __ _ _ __  ___
 // | '_ ` _ \ / _` | '_ \/ __|
 // | | | | | | (_| | |_) \__ \

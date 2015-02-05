@@ -14,6 +14,7 @@ var concat = require('gulp-concat');
 gulp.task('build',[], function() {
     gulp.src([
         './stylesheets/_smp-header.scss',
+        './stylesheets/_smp-utils.scss',
         './stylesheets/_smp-maps.scss',
         './stylesheets/_smp-mapmaps.scss',
         './stylesheets/_smp-listmaps.scss',
