@@ -63,7 +63,8 @@
     @return null;
   }
 
-  @return nth($tuple, 2);
+  // @return nth($tuple, 2);
+  @return slice($tuple, 2, length($tuple));
 }
 
 
@@ -157,6 +158,7 @@
 /// @param {Arglist} $keys - nested keys
 /// @return {*}
 @function map-get-nested($map, $keys...) {
+  @if length($map) == 0 { @return null; }
   @each $key in $keys {
     @if type-of($map) != 'map' {
       @return $map;
