@@ -1,0 +1,926 @@
+///                                                                  _
+///                                                                 | |
+///  ___  __ _ ___ ___ ______ _ __ ___   __ _ _ __  ___ ______ _ __ | |_   _ ___
+/// / __|/ _` / __/ __|______| '_ ` _ \ / _` | '_ \/ __|______| '_ \| | | | / __|
+/// \__ \ (_| \__ \__ \      | | | | | | (_| | |_) \__ \      | |_) | | |_| \__ \
+/// |___/\__,_|___/___/      |_| |_| |_|\__,_| .__/|___/      | .__/|_|\__,_|___/
+///                                          | |              | |
+///                                          |_|              |_|
+///  Sass Maps Plus 0.9.2
+///  Advanced map and list-map manipulation for all versions of Sass
+///  MIT License
+///  @author Lu Nelson
+
+//        _   _ _ _ _   _
+//       | | (_) (_) | (_)
+//  _   _| |_ _| |_| |_ _  ___  ___
+// | | | | __| | | | __| |/ _ \/ __|
+// | |_| | |_| | | | |_| |  __/\__ \
+//  \__,_|\__|_|_|_|\__|_|\___||___/
+
+/// Return a sub-list from a list, *sliced* from/to given indices
+/// @access private
+/// @group utilities
+/// @param {List} $list - List to slice
+/// @param {Number} $start [1] - Start index
+/// @param {Number} $end [length($list)] - End index
+/// @param {String} $separator [list-separator($list)] - List separator
+/// @return {List} - Sliced list
+@function slice($list, $start: 1, $end: length($list), $separator: list-separator($list)) {
+  $output: ();
+
+  @if $start >= 1 and $end >= $start {
+    @for $i from $start through $end {
+      $output: append($output, nth($list, $i), $separator);
+    }
+  }
+
+  @return $output;
+}
+
+
+/// Return the key (first value) from a two-item list
+/// @access private
+/// @group utilities
+/// @param {List} $tuple - Tuple
+/// @return {* | Null} - Key from `$tuple` or `null`
+@function tuple-key($tuple) {
+  @if length($tuple) < 1 {
+    @return null;
+  }
+
+  @return nth($tuple, 1);
+}
+
+
+/// Return the value (second value) from a two-item list
+/// @access private
+/// @group utilities
+/// @param {List} $tuple - Tuple
+/// @return {* | Null} - Value from `$tuple` or `null`
+@function tuple-value($tuple) {
+  @if length($tuple) < 2 {
+    @return null;
+  }
+
+  @return nth($tuple, 2);
+}
+
+
+/// Return input `$string` printed `$n` times
+/// @access private
+/// @group utilities
+/// @param {String} $string - String to repeat
+/// @param {Number} $n - Number of times
+/// @return {String}
+@function str-multiply($string, $n) {
+  $output: '';
+
+  @if $n > 0 {
+    @for $i from 1 through $n {
+      $output: $output + $string;
+    }
+  }
+
+  @return $output;
+}
+
+
+//  _ __ ___   __ _ _ __  ___
+// | '_ ` _ \ / _` | '_ \/ __|
+// | | | | | | (_| | |_) \__ \
+// |_| |_| |_|\__,_| .__/|___/
+//                 | |
+//                 |_|
+
+/// Return previous key from map, given $key
+/// @access public
+/// @group maps
+/// @param {Map} $map - Map
+/// @param {*} $key - Pivot key
+/// @return {*}
+/// @require {function} map-keys
+@function map-prev-key($map, $key) {
+  $keys: map-keys($map);
+  $index: index($keys, $key) - 1;
+  @return if($index >= 1, nth($keys, $index), null);
+}
+
+
+/// Return next key from map, given $key
+/// @access public
+/// @group maps
+/// @param {Map} $map - Map
+/// @param {*} $key - Pivot key
+/// @return {*}
+/// @require {function} map-keys
+@function map-next-key($map, $key) {
+  $keys: map-keys($map);
+  $index: index($keys, $key) + 1;
+  @return if($index <= length($keys), nth($keys, $index), null);
+}
+
+
+/// get all values from $map for keys in $keys list
+/// @access public
+/// @group maps
+/// @param {Map} $map - map
+/// @param {Arglist} $keys - keys to get
+/// @return {*}
+@function map-get-all($map, $keys...) {
+  $out:();
+  @each $key in $keys {
+    $value: map-get($map, $key);
+    $out: if($value, append($out, $value), $out);
+  }
+  @return if($out != (), $out, null);
+}
+
+/// get first value from $map for keys in $keys list
+/// @access public
+/// @group maps
+/// @param {Map} $map - map
+/// @param {Arglist} $keys - keys to get
+/// @return {*}
+@function map-get-any($map, $keys...) {
+  @each $key in $keys {
+    $value: map-get($map, $key);
+    @if $value { @return $value; }
+  }
+  @return null;
+}
+
+/// get value at nested or 'deep' key, per $keys list
+/// @access public
+/// @group maps
+/// @param {Map} $map - map
+/// @param {Arglist} $keys - nested keys
+/// @return {*}
+@function map-get-nested($map, $keys...) {
+  @each $key in $keys {
+    @if type-of($map) != 'map' {
+      @return $map;
+    }
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}
+
+/// merge $value to $map at nested or 'deep' $key, per $kv list
+/// (works in merge- or set-style syntax)
+/// @access public
+/// @group maps
+/// @param {Map} $map - target map
+/// @param {Arglist} $kv - keys and map (map is final item in list)
+/// @return {Map} - Updated map
+/// @require {function} slice
+/// @require {function} map-get-nested
+@function map-merge-nested($map, $keys-and-value...) {
+  $keys-and-value-length: length($keys-and-value);
+  $key-length: $keys-and-value-length - 1;
+  $value: nth($keys-and-value, $keys-and-value-length);
+  $value-is-map: type-of($value) == 'map';
+
+  @if $key-length == 0 {
+    $value: map-merge($map, if($value-is-map or length($value) == 0, $value, ($value: ())));
+  } @else {
+    @for $i from if($value-is-map, 0, 1) through $key-length {
+      $new: if($i == 0, $value, (nth($keys-and-value, $keys-and-value-length - $i): $value));
+      $old: if($i == $key-length, $map, map-get-nested($map, slice($keys-and-value, 1, $key-length - $i)...) or ());
+      $value: if(type-of($old) == 'map', map-merge($old, $new), $new);
+    }
+  }
+
+  @return $value;
+}
+
+/// return a pretty-printed string representation of a map
+/// @access public
+/// @group maps
+/// @param {Map} $map - Map to inspect
+/// @param {Number} $level [1] - Internal variable, **do not edit**
+/// @return {String} - String representation of `$map`
+/// @require {function} str-multiply
+/// @require {function} map-inspect
+@function map-inspect($map, $level: 1) {
+  $tab: '  ';
+  $cr: '
+';
+
+  @if type-of($map) != 'map' {
+    @return '#{inspect($map)}';
+  }
+
+  $indent: str-multiply($tab, $level + 1);
+  $output: '(' + $cr + $indent; $i: 1;
+
+  @each $key, $value in $map {
+    @if type-of($value) == 'map' {
+      $output: $output + '#{$key}: #{map-inspect($value, $level+1)}';
+    } @else {
+      $output: $output + '#{$key}: #{$value}';
+    }
+
+    @if $i < length(map-keys($map)) {
+      $output: $output + ',' + $cr + $indent;
+    }
+
+    $i: $i + 1;
+  }
+
+  $outdent: str-multiply($tab, $level);
+
+  @return $output + $cr + $outdent + ')';
+}
+
+
+
+//                                                              __                              _ _     _
+//                                                             / /                             | (_)   | |
+//  _ __ ___   __ _ _ __ ______ _ __ ___   __ _ _ __  ___     / /   _ __ ___   __ _ _ __ ______| |_ ___| |_ ___
+// | '_ ` _ \ / _` | '_ \______| '_ ` _ \ / _` | '_ \/ __|   / /   | '_ ` _ \ / _` | '_ \______| | / __| __/ __|
+// | | | | | | (_| | |_) |     | | | | | | (_| | |_) \__ \  / /    | | | | | | (_| | |_) |     | | \__ \ |_\__ \
+// |_| |_| |_|\__,_| .__/      |_| |_| |_|\__,_| .__/|___/ /_/     |_| |_| |_|\__,_| .__/      |_|_|___/\__|___/
+//                 | |                         | |                                 | |
+//                 |_|                         |_|                                 |_|
+
+/// Collect a list-of-maps or map-of-maps, in to a new list-of-maps or map-of-maps, based on truthiness of value at key(s) in those maps
+/// @access public
+/// @group map-lists/map-maps
+/// @param {Map|List} $maps - Map of maps, or List of maps, to collect from
+/// @param {Arglist} $keys - Chain of keys to the value that will determine collections
+/// @return {Map|list}
+/// @require {function} map-get-nested
+@function maps-collect($maps, $keys...) {
+
+  @if length($keys) == 0 { @return $maps; }
+
+  @if length($maps) == 0 { @return $maps; }
+
+  $collector: ();
+
+  $map-of-maps: type-of($maps) == 'map';
+
+  @if $map-of-maps {
+
+    @each $key, $map in $maps {
+      $curr-value: map-get-nested($map, $keys...);
+      @if $curr-value { $collector: map-merge($collector, ($key: $map)); }
+    }
+    @return $collector;
+
+  } @else {
+
+    @each $map in $maps {
+      $curr-value: map-get-nested($map, $keys...);
+      @if $curr-value { $collector: append($collector, $map); }
+    }
+    @return $collector;
+
+  }
+}
+
+
+/// Global sort direction: either `asc` or `desc`
+/// @access public
+/// @group map-lists/map-maps
+$maps-sort-dir: 'asc';
+
+
+/// Sort a list-of-maps or map-of-maps, based on value at key(s) in maps
+/// @access public
+/// @group map-lists/map-maps
+/// @param {Map|List} $maps - Map of maps, or List of maps, to sort
+/// @param {Arglist} $keys - Chain of keys to the value that will be sorted for
+/// @return {Map|List}
+/// @require {function} map-get-nested
+@function maps-sort($maps, $keys...) {
+
+  @if length($keys) == 0 { @return $maps; }
+
+  @if length($maps) > 1 {
+
+    $less: ();
+    $equal: ();
+    $greater: ();
+
+    $map-of-maps: type-of($maps) == 'map';
+
+    @if $map-of-maps {
+
+      $seed-map: nth(nth($maps, ceil(length($maps) / 2)), 2);
+
+      $seed-value: map-get-nested($seed-map, $keys...);
+
+      // TODO: add code to handle case of non-number values (warn and return $maps)
+
+      @each $key, $map in $maps {
+
+        $curr-value: map-get-nested($map, $keys...);
+
+        @if $curr-value == $seed-value {
+          $equal: map-merge($equal, ($key: $map));
+        } @else if $curr-value < $seed-value {
+          @if $maps-sort-dir == 'asc' {
+            $less: map-merge($less, ($key: $map));
+          } @else {
+            $greater: map-merge($greater, ($key: $map));
+          }
+        } @else {
+          @if $maps-sort-dir == 'asc' {
+            $greater: map-merge($greater, ($key: $map));
+          } @else {
+            $less: map-merge($less, ($key: $map));
+          }
+        }
+      }
+
+      $less: maps-sort($less, $keys...);
+      $greater: maps-sort($greater, $keys...);
+
+      @return map-merge(map-merge($less, $equal), $greater);
+
+    } @else {
+
+      $seed-map: nth($maps, ceil(length($maps) / 2));
+
+      $seed-value: map-get-nested($seed-map, $keys...);
+
+      @each $map in $maps {
+
+        $curr-value: map-get-nested($map, $keys...);
+
+        @if $curr-value == $seed-value {
+          $equal: append($equal, $map);
+        } @else if $curr-value < $seed-value {
+          @if $maps-sort-dir == 'asc' {
+            $less: append($less, $map);
+          } @else {
+            $greater: append($greater, $map);
+          }
+        } @else {
+          @if $maps-sort-dir == 'asc' {
+            $greater: append($greater, $map);
+          } @else {
+            $less: append($less, $map);
+          }
+        }
+      }
+
+      $less: maps-sort($less, $keys...);
+      $greater: maps-sort($greater, $keys...);
+
+      @return join(join($less, $equal), $greater);
+
+    }
+  }
+
+  @return $maps;
+}
+
+
+
+
+
+
+
+
+//  _ _     _
+// | (_)   | |
+// | |_ ___| |_ ______ _ __ ___   __ _ _ __  ___
+// | | / __| __|______| '_ ` _ \ / _` | '_ \/ __|
+// | | \__ \ |_       | | | | | | (_| | |_) \__ \
+// |_|_|___/\__|      |_| |_| |_|\__,_| .__/|___/
+//                                    | |
+//                                    |_|
+
+/// Return list-map from `$list` and ensure input list-map is list-of-lists
+/// @access public
+/// @group list-map
+/// @param {List} $list
+/// @return {List-map}
+@function list-map-check($list) {
+  @if length($list) == 2 and length(nth($list, 1)) == 1 {
+    @return append((), $list, 'comma');
+  }
+
+  @return $list;
+}
+
+
+/// Return comma-separated list of keys from list-map
+/// Conformant with Ruby Sass `map-keys()`
+/// @access public
+/// @group list-map
+/// @param {Arglist} $list - List-map
+/// @return {List}
+/// @require {function} list-map-check
+/// @require {function} tuple-key
+@function list-map-keys($list...) {
+  $list: if(length($list) == 1, list-map-check($list...), list-map-check($list));
+  $output: ();
+
+  @each $tuple in $list {
+    $output: append($output, tuple-key($tuple), 'comma');
+  }
+
+  @return $output;
+}
+
+
+/// Return comma-separated list of values from list-map
+/// Conformant with Ruby Sass `map-values()`
+/// @access public
+/// @group list-map
+/// @param {Arglist} $list - List-map
+/// @return {List}
+/// @require {function} list-map-check
+/// @require {function} tuple-value
+@function list-map-values($list...) {
+  $list: if(length($list) == 1, list-map-check($list...), list-map-check($list));
+  $output: ();
+
+  @each $tuple in $list {
+    $output: append($output, tuple-value($tuple), 'comma');
+  }
+
+  @return $output;
+}
+
+
+/// Check whether key exists in list-map at root level
+/// Conformant with Ruby Sass `map-has-key()`
+/// @access public
+/// @group list-map
+/// @param {List-map} $list - List-map
+/// @param {*} $key - Key to check
+/// @return {Bool}
+/// @require {function} list-map-check
+/// @require {function} tuple-key
+@function list-map-has-key($list, $key) {
+  $list: list-map-check($list);
+
+  @each $tuple in $list {
+    @if tuple-key($tuple) == $key {
+      @return true;
+    }
+  }
+
+  @return false;
+}
+
+
+/// Return value corresponding to key in list-map
+/// Conformant with Ruby Sass `map-get()`
+/// @access public
+/// @group list-map
+/// @param {List-map} $list - List-map
+/// @param {*} $key - Key to fetch
+/// @return {*} - Value mapped to `$key`
+/// @require {function} list-map-check
+/// @require {function} tuple-key
+/// @require {function} tuple-value
+@function list-map-get($list, $key) {
+  $list: list-map-check($list);
+
+  @each $tuple in $list {
+    @if tuple-key($tuple) == $key {
+      @return tuple-value($tuple);
+    }
+  }
+
+  @return null;
+}
+
+
+/// Return a merge of second list-map in to first list-map
+/// Conformant with Ruby Sass `map-merge()`
+/// @access public
+/// @group list-map
+/// @param {List-map} $list1 - First list-map
+/// @param {List-map} $list2 - Second list-map
+/// @return {List-map}
+/// @require {function} list-map-check
+/// @require {function} list-map-keys
+/// @require {function} tuple-key
+@function list-map-merge($list1, $list2) {
+  $list1: list-map-check($list1);
+  $list2: list-map-check($list2);
+  $keys1: list-map-keys($list1);
+
+  @each $tuple in $list2 {
+    $index: index($keys1, tuple-key($tuple));
+
+    @if $index {
+      $list1: set-nth($list1, $index, $tuple);
+    } @else {
+      $list1: append($list1, $tuple, 'comma');
+    }
+  }
+
+  @return $list1;
+}
+
+
+/// Return list-map with tuples removed, according to keys (if found)
+/// @access public
+/// @group list-map
+/// @param {List-map} $list - List-map
+/// @param {Arglist} $keys - Keys to remove from `$list`
+/// @return {List-map}
+/// @require {function} list-map-check
+/// @require {function} tuple-key
+@function list-map-remove($list, $keys...) {
+  $list: list-map-check($list);
+  $output: ();
+
+  @each $tuple in $list {
+    @if not index($keys, tuple-key($tuple)) {
+      $output: append($output, $tuple, 'comma');
+    }
+  }
+
+  @return $output;
+}
+
+
+/// A *deep*, nested or chained version of `map-get()`
+/// @access public
+/// @group list-map
+/// @param {List-map} $list - List-map
+/// @param {Arglist} $keys - Keys to fetch
+/// @return {*}
+/// @require {function} list-map-get
+@function list-map-get-nested($list, $keys...) {
+  @each $key in $keys {
+    @if type-of($list) != 'list' {
+      @return $list;
+    }
+
+    $list: list-map-get($list, $key);
+  }
+
+  @return $list;
+}
+
+
+/// A *deep*, nested or chained version of `map-merge`; offers `map-set` syntax too
+/// @access public
+/// @group list-map
+/// @param {List-map} $list - List-map
+/// @param {Arglist} $args
+/// @return {List-map}
+/// @require {function} list-map-check
+/// @require {function} list-map-merge
+/// @require {function} list-map-get-nested
+/// @require {function} slice
+@function list-map-merge-nested($list, $kv...) {
+  $list: list-map-check($list);
+  $kv-length: length($kv);
+  $key-length: $kv-length - 1;
+  $value: nth($kv, $kv-length);
+  $value-is-list: type-of($value) == 'list';
+
+  @if $key-length == 0 {
+    $value: list-map-merge($list, if($value-is-list, $value, append((), $value (), 'comma')));
+  } @else {
+    @for $i from if($value-is-list, 0, 1) through $key-length {
+      $new: if($i == 0, $value, append((), nth($kv, $kv-length - $i) $value, 'comma'));
+      $old: if($i == $key-length, $list, list-map-get-nested($list, slice($kv, 1, $key-length - $i)...) or ());
+      $value: if(type-of($old) == 'list', list-map-merge($old, $new), $new);
+    }
+  }
+
+  @return $value;
+}
+
+
+
+
+/// Return previous key from list-map
+/// @access public
+/// @group list-map
+/// @param {List-map} $list - List-map
+/// @param {*} $key - Pivot key
+/// @return {*}
+/// @require {function} list-map-check
+/// @require {function} list-map-keys
+@function list-map-prev-key($list, $key) {
+  $list: list-map-check($list);
+  $keys: list-map-keys($list);
+
+  @return nth($keys, index($keys, $key) - 1);
+}
+
+
+/// Return next key from list-map
+/// @access public
+/// @group list-map
+/// @param {List-map} $list - List-map
+/// @param {*} $key - Pivot key
+/// @return {*}
+/// @require {function} list-map-check
+/// @require {function} list-map-keys
+@function list-map-next-key($list, $key) {
+  $list: list-map-check($list);
+  $keys: list-map-keys($list);
+
+  @return nth($keys, index($keys, $key) + 1);
+}
+
+
+/// Return the string representation of a list-map
+/// @access public
+/// @group list-map
+/// @param {Arglist} $list - List-map to inspect
+/// @return {String}
+/// @require {function} list-map-check
+/// @require {function} list-map-keys
+/// @require {function} list-map-inspect
+/// @require {function} tuple-key
+/// @require {function} tuple-values
+@function list-map-inspect($list...) {
+  $list: if(length($list) == 1, list-map-check($list...), list-map-check($list));
+  $output: '(';
+  $i: 1;
+
+  @each $tuple in $list {
+    @if length($tuple) != 2 {
+      $output: $output + '#{$tuple}';
+    } @else {
+      $key: tuple-key($tuple);
+      $value: tuple-value($tuple);
+      $output: $output + '#{$key} ' + if(type-of($value) == 'list', '#{list-map-inspect($value)}', '#{$value}');
+    }
+
+    @if $i < length(list-map-keys($list)) {
+      $output: $output + ', ';
+    }
+
+    $i: $i + 1;
+  }
+
+  @return $output + ')';
+}
+
+
+/// Return the string representation of a list-map with indents and line breaks
+/// @access public
+/// @group list-map
+/// @param {List-map} $list - List-map to inspect
+/// @param {Number} $level [1] - Internal variable, **do not edit**
+/// @require {function} list-map-check
+/// @require {function} list-map-keys
+@function list-map-pretty($list, $level: 1) {
+  $tab: '  ';
+  $cr: '
+';
+  $list: if(length($list) == 1, list-map-check($list...), list-map-check($list));
+  $indent: $tab; $outdent: $tab;
+
+  @for $n from 1 through $level {
+    $indent: $indent + $tab;
+  }
+
+  @for $n from 1 through $level - 1 {
+    $outdent: $outdent + $tab;
+  }
+
+  $output: '(' + $cr + $indent;
+  $i: 1;
+
+  @each $tuple in $list {
+    @if length($tuple) != 2 {
+      $output: $output + '#{$tuple}';
+    } @else {
+      $key: nth($tuple, 1); $value: nth($tuple, 2);
+      @if type-of($value) == 'list' {
+        $output: $output + '#{$key} #{list-map-pretty($value, $level+1)}';
+      } @else {
+        $output: $output + '#{$key} #{$value}';
+      }
+    }
+
+    @if $i < length(list-map-keys($list)) {
+      $output: $output + ',' + $cr + $indent;
+    }
+
+    $i: $i + 1;
+  }
+
+  @return $output + $cr + $outdent + ')';
+}
+
+
+/// Global sort direction: either `asc` or `desc`
+/// @access public
+/// @group list-map
+$list-map-sort-dir: 'asc';
+
+
+/// Return sorted list-map, based on values at given key(s)
+/// @access public
+/// @group list-map
+/// @param {List-map} $list-map - List-map to sort
+/// @param {Arglist} $keys - Keys to use for sorting
+/// @return {List-map}
+/// @require {function} list-map-check
+/// @require {function} list-map-get-nested
+@function list-map-sort($list-map, $keys...) {
+  @if length($keys) < 1 {
+    @return $list-map;
+  }
+
+  $list-map: list-map-check($list-map);
+
+  @if length($list-map) > 1 {
+    $less: ();
+    $equal: ();
+    $greater: ();
+    $seed: nth($list-map, ceil(length($list-map) / 2));
+    $seed-value: list-map-get-nested(nth($seed, 2), $keys...);
+
+    @each $item in $list-map {
+      $item-value: list-map-get-nested(nth($item, 2), $keys...);
+
+      @if $list-map-sort-dir == 'asc' {
+        @if $item-value == $seed-value {
+          $equal: append($equal, $item, 'comma');
+        } @else if $item-value < $seed-value {
+          $less: append($less, $item, 'comma');
+        } @else {
+          $greater: append($greater, $item, 'comma');
+        }
+      } @else {
+        @if $item-value == $seed-value {
+          $equal: append($equal, $item, 'comma');
+        } @else if $item-value > $seed-value {
+          $less: append($less, $item, 'comma');
+        } @else {
+          $greater: append($greater, $item, 'comma');
+        }
+      }
+    }
+
+    @return join(join(map-sort($less, $keys...), $equal), list-map-sort($greater, $keys...));
+  }
+
+  @return $list-map;
+}
+
+
+/// Return JSON string representation of a list-map
+/// @access public
+/// @group list-map
+/// @param {Arglist} $list - List-map
+/// @return {String} - JSON string
+/// @require {function} list-map-check
+/// @require {function} list-map-keys
+@function list-map-json($list...) {
+  $list: if(length($list) == 1, list-map-check($list...), list-map-check($list));
+  $output: '{ ';
+  $i: 1;
+
+  @each $tuple in $list {
+    @if length($tuple) != 2 {
+      $output: $output + '#{$tuple}';
+    } @else {
+      $key: nth($tuple, 1);
+      $value: nth($tuple, 2);
+
+      @if type-of($value) == 'list' {
+        $output: $output + '"#{$key}": #{list-map-json($value)}';
+      } @else if type-of($value) == 'number' {
+        $value: if(unitless($value), $value, '"#{$value}"');
+        $output: $output + '"#{$key}": #{$value}';
+      } @else {
+        $value: if(type-of($value) == 'bool', $value, '"#{$value}"');
+        $output: $output + '"#{$key}": #{$value}';
+      }
+    }
+
+    @if $i < length(list-map-keys($list)) {
+      $output: $output + ', ';
+    }
+
+    $i: $i + 1;
+  }
+
+  @return $output + ' }';
+}
+
+//        _ _
+//       | (_)
+//   __ _| |_  __ _ ___  ___  ___
+//  / _` | | |/ _` / __|/ _ \/ __|
+// | (_| | | | (_| \__ \  __/\__ \
+//  \__,_|_|_|\__,_|___/\___||___/
+
+/////////
+// GET //
+/////////
+
+/// 'z' nested-getter function alias
+/// @access public
+/// @group aliases
+/// @alias map-get-nested
+/// @require {function} map-get-nested
+@function map-get-z($args...) { @return map-get-nested($args...); }
+
+/// 'deep' nested-getter function alias
+/// @access public
+/// @group aliases
+/// @alias map-get-nested
+/// @require {function} map-get-nested
+@function map-get-deep($args...) { @return map-get-nested($args...); }
+
+/// universal [nested-]getter function alias (any depth)
+/// @access public
+/// @group aliases
+/// @alias map-get-nested
+/// @require {function} map-get-nested
+@function get($args...) { @return map-get-nested($args...); }
+
+///////////
+// MERGE //
+///////////
+
+/// 'z' nested-merger function alias
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function map-merge-z($args...) { @return map-merge-nested($args...); }
+
+/// 'deep' nested-merger function alias
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function map-merge-deep($args...) { @return map-merge-nested($args...); }
+
+/// universal [nested-]merger function alias (any depth)
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function merge($args...) { @return map-merge-nested($args...); }
+
+/////////
+// SET //
+/////////
+
+/// nested-setter function alias
+/// @access public
+/// @group maps
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function map-set-nested($args...) { @return map-merge-nested($args...); }
+
+/// 'z' nested-setter function alias
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function map-set-z($args...) { @return map-merge-nested($args...); }
+
+/// 'deep' nested-setter function alias
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function map-set-deep($args...) { @return map-merge-nested($args...); }
+
+/// universal [nested-]setter function alias (any depth)
+/// @access public
+/// @group aliases
+/// @alias map-merge-nested
+/// @require {function} map-merge-nested
+@function set($args...) { @return map-merge-nested($args...); }
+
+//////////////
+// LISTMAPS //
+//////////////
+
+/// List-map getter function
+/// @access public
+/// @group aliases
+/// @alias list-map-get-nested
+/// @require {function} list-map-get-nested
+@function list-get($args...) { @return list-map-get-nested($args...); }
+
+
+/// List-map setter function
+/// @access public
+/// @group aliases
+/// @alias list-map-merge-nested
+/// @require {function} list-map-merge-nested
+@function list-merge($args...) { @return list-map-merge-nested($args...); }
+
+
+/// List-map setter function
+/// @access public
+/// @group aliases
+/// @alias list-map-merge-nested
+/// @require {function} list-map-merge-nested
+@function list-set($args...) { @return list-map-merge-nested($args...); }

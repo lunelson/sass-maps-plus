@@ -69,6 +69,7 @@
 /// @param {Arglist} $keys - nested keys
 /// @return {*}
 @function map-get-nested($map, $keys...) {
+  @if length($map) == 0 { @return null; }
   @each $key in $keys {
     @if type-of($map) != 'map' {
       @return $map;

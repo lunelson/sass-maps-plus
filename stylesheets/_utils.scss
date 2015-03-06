@@ -50,7 +50,8 @@
     @return null;
   }
 
-  @return nth($tuple, 2);
+  // @return nth($tuple, 2);
+  @return slice($tuple, 2, length($tuple));
 }
 
 
