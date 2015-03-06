@@ -1,5 +1,15 @@
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
 node_modules
+
 *.sublime*
+
 *.gem
+
 .pages
 .sassdoc
+
+_test/
