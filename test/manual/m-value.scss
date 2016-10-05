@@ -1,0 +1,8 @@
+@import '../../index';
+@include setup--media(false);
+
+.test {
+  out: inspect(inner-x());
+  out: inspect(inner-x(null));
+  out: if(0, truthy, falsey);
+}

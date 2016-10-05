@@ -1,0 +1,37 @@
+@import '../../index';
+
+$base: (
+  lines: (s: 0.8, l: 1.6),
+  sizes: (s: 0.8, l: 1.6),
+  mults-x: (s: 0.8, l: 1.6),
+  mults-y: (s: 0.8, l: 1.6),
+);
+
+
+@include media-setup();
+
+@include typo-setup();
+
+// p { @include typel; }
+
+// .nest p { @include typel(0.85, 1.1 ); }
+
+.cell-test {
+  @include cell-span(4);
+  @include cell-left(1);
+  @include cell-right(-1);
+}
+
+.test {
+  keys: map-keys($media);
+  @include media-slice(null,c) {
+    color: white;
+  }
+
+  @include media-slice(c) {
+    color: red;
+  }
+  @include media-slice(b,b) {
+    color: red;
+  }
+}

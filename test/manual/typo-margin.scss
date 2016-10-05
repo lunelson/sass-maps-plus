@@ -1,0 +1,10 @@
+@import '../../index';
+
+@include init-media(false, true);
+
+.test {
+  base: typo-margin(1); // base
+  zero: typo-margin(0); // zero
+  inherit: typo-margin(null); // inherit
+  undo: typo-margin(false); // undo
+}

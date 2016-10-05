@@ -1,0 +1,140 @@
+@import '../../index';
+
+@include setup--media(false);
+
+//   @mixin cell-padding($mult) {
+//     $gutter: if($mult!=false, margin-x($mult), $mult);
+//     @if $gutter {
+//       padding-right: $gutter/2;
+//       padding-left: $gutter/2;
+//     }
+//   }
+
+//   @mixin grid-margins($mult) {
+//     $gutter: if($mult!=false, margin-x($mult), null);
+//     @if $gutter {
+//       width: add-calc(100%, $gutter);
+//       margin-right: $gutter/-2;
+//       margin-left: $gutter/-2;
+//     }
+//   }
+
+
+// //////////
+// // f-grid //
+// //////////
+
+//   @mixin f-cell($mult: null) {
+//     display: block;
+//     float: left;
+//     min-height: 1px; // http://css-tricks.com/make-sure-columns-dont-collapse-horizontally/
+//     background-clip: content-box;
+//     @include cell-padding($mult);
+//   }
+
+//   @mixin f-grid($mult: null, $cell: '*') {
+//     display: block;
+//     position: relative; // for 'out' positioned cells which are absolute
+//     @include grid-margins($mult);
+//     @if $cell { & > #{$cell} { @include f-cell($mult); } }
+//   }
+
+// /////////////////////
+// // grid (flexbox) //
+// /////////////////////
+
+//   @mixin cell($mult: null) {
+//     flex: 1 1 auto;
+//     width: 0%;
+//     min-width: 0%; // https://css-tricks.com/flexbox-truncated-text/
+//     background-clip: content-box;
+//     @include cell-padding($mult);
+//   }
+
+//   @mixin grid($mult: null, $cell: '*') {
+//     display: flex;
+//     flex-wrap: wrap;
+//     position: relative; // for 'out' positioned cells which are absolute
+//     @include grid-margins($mult);
+//     @if $cell { & > #{$cell} { @include cell($mult); } }
+//   }
+
+//   ////////////
+//   // regrid //
+//   ////////////
+
+//   @mixin degrid($mult: null, $cell: '*', $span: 1, $left: 0){
+//     $gutter: if($mult!=false, margin-x($mult), null);
+//     $grid-margin: div-calc($gutter, -2);
+//     $span-width: add-calc(100%, $gutter);
+//     $cols: _nth($span, 2) or medium-value('grid-columns') or 4;
+//     $right: $cols - $left - $span;
+//     width: mul-calc($span-width, $cols);
+//     margin-left: sub-calc($grid-margin, if($left == 0, 0, mul-calc($span-width, $left)));
+//     margin-right: sub-calc($grid-margin, if($right == 0, 0, mul-calc($span-width, $right)));
+//   }
+
+//   @mixin regrid($mult: null, $cell: '*', $span: 1, $left: 0){
+//     @include degrid($mult, $cell, $span, $left);
+//     @include grid(false, false);
+//     @if $cell { & > #{$cell} { @include cell($mult); } }
+//   }
+
+//   @mixin f-regrid($mult: null, $cell: '*', $span: 1, $left: 0){
+//     @include f-grid(false, false);
+//     @include degrid($mult, $cell, $span, $left);
+//     @if $cell { & > #{$cell} { @include f-cell($mult); } }
+//   }
+
+// /////////////
+// // ungrid //
+// /////////////
+
+//   @mixin ungrid($mult: null, $span: 1, $left: 0){
+//     @include degrid($mult, false, $span, $left);
+//     @include f-grid(false, false);
+//     @include cell-padding($mult);
+//   }
+
+// //////////////////////
+// // cell (all types) //
+// //////////////////////
+
+//   @mixin push($left: null, $right: null, $d: null) {
+//     $d: $d or medium-value('grid-columns') or 4;
+//     @if $left == 'out' or $right == 'out' {
+//       position: absolute;
+//       top: auto;
+//       #{if($left=='out', 'right', 'left')}: 100%;
+//     } @else {
+//       @if $left { margin-left: nth($left, 1) / (_nth($left, 2) or $d) * 100%; }
+//       @if $right { margin-right: nth($right, 1) / (_nth($right, 2) or $d) * 100%; }
+//     }
+//   }
+
+//   // span, with optional 'push'
+//   @mixin span($span: null, $left: null, $right: null) {
+//     $n: nth($span, 1) or medium-value('type-columns') or 4;
+//     $d: _nth($span, 2) or medium-value('grid-columns') or 4;
+//     width: $n / $d * 100%;
+//     flex-grow: 0;
+//     @if $left or $right { @include push($left, $right, $d); }
+//   }
+
+
+/* FLOAT */
+// .f-grid { @include f-grid(false); }
+// .f-regrid { @include f-regrid(1, '*', 1); }
+
+/* FLEX */
+.grid { @include grid(false); }
+.regrid { @include regrid(1, '*', 1); }
+.span { @include cell-span(1 2, null, 'out'); }
+.push { @include cell-push(null, -1 3); }
+
+/* UNGRID */
+.ungrid { @include ungrid(1, 1); }
+// .grid--md { @include grid(1); }
+// .grid { @include grid(); }
+// .regrid { @include regrid(); }
+// .ungrid { @include ungrid(); }

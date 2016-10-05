@@ -1,0 +1,74 @@
+.nest, .best {
+  p {
+    @include typo3(1.25, auto) {
+    margin-top: t-margin(2);
+    // size: size();
+    // line: line();
+    // line-height: mval(line-height);
+    // auto-height: auto-height();
+    // auto-line: auto-line();
+    // trim: trim();
+    // char: char-height();
+    // font-family: map-get(font(), font-family);
+    }
+  }
+}
+/*
+typo-parent
+  $curr-typo-sels
+  $curr-mult-y-val
+typo
+  @at-root #{insert-sels($curr-typo-sels, '>')} {
+    margin-top: t-margin(); // MAKE SURE THE MARGIN FUNCTIONS PICK UP MULT CORRECTLY
+    @content
+  }
+ */
+
+// .foo, .bar {
+//   .baz, .bif {
+//     initial: initial-parents();
+//     last: last-parents();
+//     gp: insert-grandparents('.insert', '>');
+//     @at-root #{insert-grandparents('.insert', '>')} {
+//       color: green;
+//     }
+//   }
+// }
+
+.pif, .paf {
+  @at-root #{insert-grandparents(if($curr-typo-area,'','.typo'),'> * +')} {
+    content: 'margin here';
+    margin-top: t-margin();
+  }
+  // @at-root #{insert-grandparents(if($curr-typo-area,'','.typo'),'>')} {
+  //   content: 'content goes here';
+  // }
+  @at-root #{insert-grandparents(if($curr-typo-area,'','.typo'))} {
+    /* font-size: unit-assert($size, em) * $size-adjust; */
+  }
+
+.foo, .bar {
+  @include typo-area {
+    .baz, .bif {
+      // initial: inspect(initial-parents());
+      // typo-sels: inspect($curr-typo-sels);
+      // initial-length: length(initial-parents());
+      // typo-sels-length: length($curr-typo-sels);
+      // equal: inspect(initial-parents() == $curr-typo-sels);
+      // last: inspect(last-parents());
+      // gp: insert-grandparents('.insert', '>');
+      // gp: insert-grandparents(if($curr-typo-area,'','.typo'),'>');
+      // gp: insert-grandparents($curr-typo-sels, '>');
+      @at-root #{insert-grandparents(if($curr-typo-area,'','.typo'),'> * +')} {
+        margin-top: t-margin();
+      }
+      @at-root #{insert-grandparents(if($curr-typo-area,'','.typo'),'>')} {
+        content: 'content goes here'
+      }
+      @at-root #{insert-grandparents(if($curr-typo-area,'','.typo'))} {
+        content: 'content goes here'
+      }
+    }
+  }
+}
+}

@@ -1,0 +1,174 @@
+html {
+  font-size: 1em; }
+
+body {
+  line-height: 1.5; }
+
+@media (min-width: 48em) {
+  html {
+    font-size: 2em; } }
+
+@media (min-width: 80em) {
+  body {
+    line-height: 2; } }
+
+body::before {
+  content: '{"media": {"a": {"font-size": "16px", "line-height": 1.5, "margin-x": "2rem", "margin-y": "2rem", "inner-x": "2rem", "inner-y": "2rem", "outer-top": "2rem", "outer-right": "2rem", "outer-bottom": "2rem", "outer-left": "2rem", "lines": {}, "sizes": {}, "mults-x": {}, "mults-y": {}, "size-mod": 1.5, "mult-mod": 1.5, "html-scale": 1, "breakpoint": "32em", "body-width": "32rem", "content-width": "28rem"}, "b": {"font-size": "32px", "line-height": 1.5, "margin-x": "5rem", "margin-y": "2rem", "inner-x": "2rem", "inner-y": "2rem", "outer-top": "2rem", "outer-right": "2rem", "outer-bottom": "2rem", "outer-left": "2rem", "lines": {}, "sizes": {}, "mults-x": {}, "mults-y": {}, "size-mod": 1.5, "mult-mod": 1.5, "html-scale": 2, "breakpoint": "48em", "body-width": "24rem", "content-width": "20rem"}, "c": {"font-size": "32px", "line-height": 1.5, "margin-x": "5rem", "margin-y": "3rem", "inner-x": "2rem", "inner-y": "2rem", "outer-top": "2rem", "outer-right": "2rem", "outer-bottom": "2rem", "outer-left": "2rem", "lines": {}, "sizes": {}, "mults-x": {}, "mults-y": {}, "size-mod": 1.5, "mult-mod": 1.5, "html-scale": 2, "breakpoint": "64em", "body-width": "32rem", "content-width": "28rem"}, "d": {"font-size": "32px", "line-height": 2, "margin-x": "5rem", "margin-y": "3rem", "inner-x": "2rem", "inner-y": "2rem", "outer-top": "2rem", "outer-right": "2rem", "outer-bottom": "2rem", "outer-left": "2rem", "lines": {}, "sizes": {}, "mults-x": {}, "mults-y": {}, "size-mod": 1.5, "mult-mod": 1.5, "html-scale": 2, "breakpoint": "80em", "body-width": "40rem", "content-width": "36rem"}}}';
+  display: block;
+  height: 0;
+  overflow: hidden;
+  width: 0; }
+
+head {
+  font-family: '{"media": {"a": {"font-size": "16px", "line-height": 1.5, "margin-x": "2rem", "margin-y": "2rem", "inner-x": "2rem", "inner-y": "2rem", "outer-top": "2rem", "outer-right": "2rem", "outer-bottom": "2rem", "outer-left": "2rem", "lines": {}, "sizes": {}, "mults-x": {}, "mults-y": {}, "size-mod": 1.5, "mult-mod": 1.5, "html-scale": 1, "breakpoint": "32em", "body-width": "32rem", "content-width": "28rem"}, "b": {"font-size": "32px", "line-height": 1.5, "margin-x": "5rem", "margin-y": "2rem", "inner-x": "2rem", "inner-y": "2rem", "outer-top": "2rem", "outer-right": "2rem", "outer-bottom": "2rem", "outer-left": "2rem", "lines": {}, "sizes": {}, "mults-x": {}, "mults-y": {}, "size-mod": 1.5, "mult-mod": 1.5, "html-scale": 2, "breakpoint": "48em", "body-width": "24rem", "content-width": "20rem"}, "c": {"font-size": "32px", "line-height": 1.5, "margin-x": "5rem", "margin-y": "3rem", "inner-x": "2rem", "inner-y": "2rem", "outer-top": "2rem", "outer-right": "2rem", "outer-bottom": "2rem", "outer-left": "2rem", "lines": {}, "sizes": {}, "mults-x": {}, "mults-y": {}, "size-mod": 1.5, "mult-mod": 1.5, "html-scale": 2, "breakpoint": "64em", "body-width": "32rem", "content-width": "28rem"}, "d": {"font-size": "32px", "line-height": 2, "margin-x": "5rem", "margin-y": "3rem", "inner-x": "2rem", "inner-y": "2rem", "outer-top": "2rem", "outer-right": "2rem", "outer-bottom": "2rem", "outer-left": "2rem", "lines": {}, "sizes": {}, "mults-x": {}, "mults-y": {}, "size-mod": 1.5, "mult-mod": 1.5, "html-scale": 2, "breakpoint": "80em", "body-width": "40rem", "content-width": "36rem"}}}'; }
+
+.media-helper-test {
+  size-media: (b,);
+  margin-y-media: c d;
+  typo-media: (); }
+  @media screen and (max-width: 63.999em) {
+    .media-helper-test {
+      color: red; } }
+  @media screen and (min-width: 64em) and (max-width: 79.999em) {
+    .media-helper-test {
+      color: red; } }
+  @media screen and (min-width: 80em) {
+    .media-helper-test {
+      color: red; } }
+  @media screen and (max-width: 47.999em) {
+    .media-helper-test {
+      color: blue; } }
+  @media screen and (min-width: 48em) {
+    .media-helper-test {
+      color: blue; } }
+
+.empty-test {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  margin-top: calc(2rem - ((1.5em - 1ex) / 2));
+  margin-bottom: calc(2rem - 0.25em); }
+
+/* (
+  a:(
+    font-size:16px,
+    line-height:1.5,
+    margin-x:2rem,
+    margin-y:2rem,
+    inner-x:2rem,
+    inner-y:2rem,
+    outer-top:2rem,
+    outer-right:2rem,
+    outer-bottom:2rem,
+    outer-left:2rem,
+    lines:(
+      
+      ),
+    sizes:(
+      
+      ),
+    mults-x:(
+      
+      ),
+    mults-y:(
+      
+      ),
+    size-mod:1.5,
+    mult-mod:1.5,
+    html-scale:1,
+    breakpoint:32em,
+    body-width:32rem,
+    content-width:28rem
+    ),
+  b:(
+    font-size:32px,
+    line-height:1.5,
+    margin-x:5rem,
+    margin-y:2rem,
+    inner-x:2rem,
+    inner-y:2rem,
+    outer-top:2rem,
+    outer-right:2rem,
+    outer-bottom:2rem,
+    outer-left:2rem,
+    lines:(
+      
+      ),
+    sizes:(
+      
+      ),
+    mults-x:(
+      
+      ),
+    mults-y:(
+      
+      ),
+    size-mod:1.5,
+    mult-mod:1.5,
+    html-scale:2,
+    breakpoint:48em,
+    body-width:24rem,
+    content-width:20rem
+    ),
+  c:(
+    font-size:32px,
+    line-height:1.5,
+    margin-x:5rem,
+    margin-y:3rem,
+    inner-x:2rem,
+    inner-y:2rem,
+    outer-top:2rem,
+    outer-right:2rem,
+    outer-bottom:2rem,
+    outer-left:2rem,
+    lines:(
+      
+      ),
+    sizes:(
+      
+      ),
+    mults-x:(
+      
+      ),
+    mults-y:(
+      
+      ),
+    size-mod:1.5,
+    mult-mod:1.5,
+    html-scale:2,
+    breakpoint:64em,
+    body-width:32rem,
+    content-width:28rem
+    ),
+  d:(
+    font-size:32px,
+    line-height:2,
+    margin-x:5rem,
+    margin-y:3rem,
+    inner-x:2rem,
+    inner-y:2rem,
+    outer-top:2rem,
+    outer-right:2rem,
+    outer-bottom:2rem,
+    outer-left:2rem,
+    lines:(
+      
+      ),
+    sizes:(
+      
+      ),
+    mults-x:(
+      
+      ),
+    mults-y:(
+      
+      ),
+    size-mod:1.5,
+    mult-mod:1.5,
+    html-scale:2,
+    breakpoint:80em,
+    body-width:40rem,
+    content-width:36rem
+    )
+  ) */

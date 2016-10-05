@@ -1,0 +1,27 @@
+
+@function foo($a, $b, $c){ @return $a $b $c; }
+
+@include test-module('util/function') {
+
+  // call
+  @include test('call [fn]') {
+
+    // prep and calc $input and $expect
+    $desc: 'calls a function, passing args';
+    $input: call(foo, 1,2,3);
+    $expect: 1 2 3;
+    @include assert-equal($input, $expect, $desc);
+
+  }
+
+  // // apply
+  // @include test('apply [fn]') {
+
+  //   // prep and calc $input and $expect
+  //   @function foo($a, $b, $c){ @return $a $b $c; }
+  //   $desc: 'applies a function, passing args as splat';
+  //   $input: apply(foo 1 2 3);
+  //   $expect: 1 2 3;
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+}

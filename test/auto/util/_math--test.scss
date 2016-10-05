@@ -1,0 +1,171 @@
+@include test-module('[name of module]') {
+
+  // @include test('modular-scale [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('mscale [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('mod-scale [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('trend [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  @include test('sum [fn]') {
+
+    $desc: 'errors if any args are not numbers';
+    $input: test(1 2 3);
+    $expect: 'result';
+    @include assert-equal($input, $expect, $desc);
+
+    $desc: 'sums list of ssv numbers';
+    $input: test(1 2 3);
+    $expect: 'result';
+    @include assert-equal($input, $expect, $desc);
+
+    $desc: 'sums list of csv numbers';
+    $input: test(1 2 3);
+    $expect: 'result';
+    @include assert-equal($input, $expect, $desc);
+  }
+
+  @include test('average [fn]') {
+
+    $desc: '[what happens]';
+    $input: fn();
+    $expect: 'result';
+    @include assert-equal($input, $expect, $desc);
+  }
+  // @include test('weighted-average [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('gcd [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('reduce [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('limit [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('E [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('PI [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('TAU [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('PHI [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('int-exp [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('ceil-to [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('floor-to [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+  // @include test('round-to [fn]') {
+  //   // prep and calc $input and $expect
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // for functions
+  @include test('[function]') {
+
+    // prep and calc $input and $expect
+    $desc: '[what happens]';
+    $input: fn();
+    $expect: 'result';
+    @include assert-equal($input, $expect, $desc);
+
+    // other mixins
+    @include assert-true($input, $desc);
+    @include assert-false($input, $desc);
+    @include assert-equal($input, $expect, $desc);
+    @include assert-unequal($input, $expect, $desc);
+  }
+
+  // for mixins
+  @include test('[mixin]') {
+
+    $desc: '[what happens]';
+    @include assert($desc) {
+      @include input {
+        // content
+      }
+      @include expect {
+        // output
+      }
+    }
+
+  }
+}

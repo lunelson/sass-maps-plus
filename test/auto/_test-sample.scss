@@ -1,0 +1,39 @@
+/*
+
+SAMPLE
+
+@include test-module('[name of module]') {
+
+  // for functions
+  @include test('[function]') {
+
+    // prep and calc $input and $expect
+    $desc: '[what happens]';
+    $input: fn();
+    $expect: 'result';
+    @include assert-equal($input, $expect, $desc);
+
+    // other mixins
+    @include assert-true($input, $desc);
+    @include assert-false($input, $desc);
+    @include assert-equal($input, $expect, $desc);
+    @include assert-unequal($input, $expect, $desc);
+  }
+
+  // for mixins
+  @include test('[mixin]') {
+
+    $desc: '[what happens]';
+    @include assert($desc) {
+      @include input {
+        // content
+      }
+      @include expect {
+        // output
+      }
+    }
+
+  }
+}
+
+*/

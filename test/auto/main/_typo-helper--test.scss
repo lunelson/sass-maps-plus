@@ -1,0 +1,179 @@
+// @import '../../dist/all';
+
+@include test-module('main/typo-helper') {
+
+  $base: (
+
+    font-size: 16px,
+    line-height: 1.4,
+    margin-x: 1rem,
+    margin-y: 1.4rem,
+
+    lines: ( test: 0.6 ),
+    sizes: ( test: 0.6 ),
+    mults-x: ( test: 0.6 ),
+    mults-y: ( test: 0.6 ),
+    size-mod: 1.5,
+    mult-mod: 1.5
+
+  ) !global;
+
+
+  @include test('mod [fn]') {
+
+    $desc: 'return the correct value';
+    $input: mod(2);
+    $expect: 2;
+    @include assert-equal($input, $expect, $desc);
+  }
+
+  @include test('size [fn]') {
+
+    $desc: 'return $curr-size-val as mult, if set';
+    $curr-size-val: 2 !global;
+    $input: size();
+    $curr-size-val: null !global;
+    $expect: 2;
+    @include assert-equal($input, $expect, $desc);
+
+    $desc: 'return mult for $curr-size-key, if set';
+    $curr-size-key: test !global;
+    $input: size();
+    $curr-size-key: null !global;
+    $expect: 0.6;
+    @include assert-equal($input, $expect, $desc);
+
+    $desc: 'return mod relative to size-mod if passed list';
+    $input: size(call(mod, 2, map-get(medium(), 'size-mod')));
+    $expect: 1.5;
+    @include assert-equal($input, $expect, $desc);
+
+    $desc: 'return mult if passed string';
+    $input: size(test);
+    $expect: 0.6;
+    @include assert-equal($input, $expect, $desc);
+
+    $desc: 'return relative mult if passed em, rem, px or unitless';
+    $input: size(20px) size(2rem) size(2em) size(2);
+    $expect: 1.25 2 2 2;
+    @include assert-equal($input, $expect, $desc);
+
+    $desc: 'return input if passed any other unit';
+    $input: size(20%);
+    $expect: 20%;
+    @include assert-equal($input, $expect, $desc);
+
+    $desc: 'return 1 if passed a null';
+    $input: size(null);
+    $expect: 1;
+    @include assert-equal($input, $expect, $desc);
+  }
+
+  // @include test('auto-line [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('line [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('mult-y [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('mult-x [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('font [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('char-height [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('line-height [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('trim-height [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('auto-height [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('margin-y [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('margin-x [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('t-margin [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  // @include test('trim [fn]') {
+
+  //   $desc: '[what happens]';
+  //   $input: fn();
+  //   $expect: 'result';
+  //   @include assert-equal($input, $expect, $desc);
+  // }
+
+  $base: () !global;
+
+}
+

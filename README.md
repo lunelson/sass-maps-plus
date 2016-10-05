@@ -1,14 +1,46 @@
 ## Sass Maps Plus
 
-These functions are under development. They are the successor to my [Sass List–Maps](http://github.com/lunelson/sass-list-maps) project. They provide advanced native map data-type manipulation and inspection in [libsass (as of version 3.1)](http://libsass.org/) and [ruby-sass (as of version 3.3)](http://sass-lang.com/).
+!['sass maps'](sass-maps-plus.png)
 
-![](sass-hash-plus.jpg)
+**Sass-Maps-Plus** is aimed at providing advanced manipulation (and debugging!) for the Sass `map` data type. They are the successor to [Sass List–Maps](http://github.com/lunelson/sass-list-maps), which polyfilled `maps` in earlier versions of Sass; but use the **native** implementation of `maps` which are in [[ruby] Sass](https://github.com/sass/sass) as of version 3.3, and [LibSass](https://github.com/sass/libsass) as of version 3.1.
 
-#### Updates
+With version 1.0.0, the main functions (`map-get`, `map-set` and `map-merge`) have been conformed to the feature-descriptions posted by @nex3 in [this issue thread](https://github.com/sass/sass/issues/1739#issuecomment-122435753), which are the basis of a [work-in-progress](https://github.com/sass/sass/pull/1904) for the next version of ruby-sass.
 
-* 0.9.2 -- break apart files in to partials, fix empty-argument edge case for nested merging.
-* 0.9.0 -- working `map-get-z()`, `map-merge-z()`, and `map-inspect()` functions for native maps.
+```scss
+$map: (a: (b: (c: d)));
+.out {
+  out: map-get($map, a, b, c); // => d
+  out: map-set($map, a, b, c, x); // => (a: (b: (c: x)))
+  out: map-merge($map, a, b, (c: x, d: y)); // => (a: (b: (c: x, d: y)))
+}
+```
 
-TODO: more.
+Some earlier functions in this library have been deprecated; the one remaining addition here is `map-print`, for debugging maps in pretty-print format.
 
-this is an arbitray addtion to show the results of this
+support Sass `map` data manipulation according to the description
+
+ They provide advanced native map data-type manipulation and inspection in [libsass (as of version 3.1)](http://libsass.org/) and [ruby-sass (as of version 3.3)](http://sass-lang.com/).
+
+
+
+### Installation
+
+This is not currently registered in any package directories but can be installed from github via `npm`, and imported in [node-sass](https://github.com/sass/node-sass) and compliant tools, as long as the `includePaths` option includes `'node_modules'`.
+
+```sh
+# in your project directory
+npm install --save lunelson/sass-maps-plus
+```
+```scss
+// in your sass file
+@import 'sass-maps-plus/index';
+```
+
+#### TODO
+
+- [ ] write tests
+- [ ] update sassdoc to gh-pages
+- [ ] update npm
+- [ ] update bower
+- [ ] update sache
+- [ ] update gemspec

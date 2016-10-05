@@ -1,0 +1,55 @@
+.grid {
+  display: block;
+  font-size: 0rem;
+  width: calc(100% + 2rem);
+  margin-right: -1rem;
+  margin-left: -1rem; }
+  .grid > * {
+    display: inline-block;
+    direction: rtl;
+    vertical-align: top;
+    min-height: 1px;
+    font-size: 1rem;
+    width: 100%;
+    padding-right: 1rem;
+    padding-left: 1rem; }
+
+.re-grid {
+  display: block;
+  font-size: 0rem;
+  width: calc((100% + 2rem) * 4);
+  margin-left: calc((2rem / -2) - ((100% + 2rem) * 2));
+  margin-right: calc((2rem / -2) - ((100% + 2rem) * 1)); }
+  .re-grid > * {
+    display: inline-block;
+    direction: rtl;
+    vertical-align: top;
+    min-height: 1px;
+    font-size: 1rem;
+    width: 100%;
+    padding-right: 1rem;
+    padding-left: 1rem; }
+
+.un-grid {
+  display: block;
+  width: calc((100% + 2rem) * 4);
+  margin-left: calc((2rem / -2) - ((100% + 2rem) * 2));
+  margin-right: calc((2rem / -2) - ((100% + 2rem) * 1));
+  padding-right: 1rem;
+  padding-left: 1rem; }
+
+/*
+
+@include grid($m, (cell: '.joe', cols: 2))
+
+@include grid($mult)
+  @include cell($mult)
+    // reset to full-width grid; next child can be a .cell
+    @include re-grid($mult, $span, $left)
+
+@include grid($mult)
+  @include cell($mult)
+    // reset to a full-width cell
+    @include un-cell($mult, $span, $left)
+
+ */
