@@ -1,0 +1,39 @@
+@import "../sass-maps-plus";
+
+/////////////////
+// HELLO WORLD //
+/////////////////
+
+.houston {
+  content: 'no way';
+  // parent: type-of(&);
+  // $parent: #{&};
+  // parent: inspect($parent);
+}
+
+/////////////////
+// TEST SUITES //
+/////////////////
+
+// @import "list-map-basic";
+// @import "list-map-advanced";
+// @import "map-basic";
+// @import "map-advanced";
+@import "map-map-list-map.scss";
+
+///////////////////
+// NEW FUNCTIONS //
+///////////////////
+
+// @import "beta";
+
+$list-map: ( alpha: 1, beta: 2, gamma: 3 );
+
+$list-map-z: (
+  alpha: (
+    beta: (
+      gamma: 3
+    )
+  )
+);
+
