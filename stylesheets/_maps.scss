@@ -70,11 +70,11 @@
 /// @return {*}
 @function map-get-nested($map, $keys...) {
   @if type-of($map) != 'map' {
-    @warn 'map-get-n: input $map is not a map'
+    @warn 'map-get-n: input $map is not a map';
     @return null;
   }
   @if length($map) == 0 {
-    @warn 'map-get-n: input $map is empty'
+    @warn 'map-get-n: input $map is empty';
     @return null;
   }
   @each $key in $keys {
