@@ -5,6 +5,14 @@
 //                 | |
 //                 |_|
 
+@function map-key-index($map, $key) {
+  @return index(map-keys($map), $key);
+}
+
+@function map-value-index($map, $value) {
+  @return index(map-values($map), $value);
+}
+
 /// Return previous key from map, given $key
 /// @access public
 /// @group maps
