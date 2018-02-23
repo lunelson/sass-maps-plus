@@ -20,6 +20,7 @@
 
 'use strict';
 
+const path = require('path');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const diff = require('gulp-diff');
@@ -27,10 +28,14 @@ const rename = require('gulp-rename');
 
 const testDest = './test';
 const testGlob = './test/**/*.scss';
+const sassIncl = path.join(__dirname, 'node_modules');
 
 function renderTests() {
   return gulp.src(testGlob)
-    .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+    .pipe(sass({
+      outputStyle: 'expanded',
+      includePaths: [sassIncl]
+    }).on('error', sass.logError))
 }
 
 gulp.task('work', function(){

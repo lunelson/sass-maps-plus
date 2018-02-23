@@ -16,7 +16,8 @@
   "author": "Lu Nelson",
   "main": "_index.scss",
   "directories": {
-    "test": "test"
+    "start": "gulp",
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",

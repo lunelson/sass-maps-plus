@@ -35,5 +35,5 @@ npm install --save @lunelson/sass-maps-plus
 ```
 ```scss
 // in your sass file, assuming you have 'node_modules' in Sass' search path
-@import 'sass-maps-plus/index';
+@import '@lunelson/sass-maps-plus/index';
 ```
