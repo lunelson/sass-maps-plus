@@ -1,40 +1,37 @@
 {
-  "title": "Sass Maps Plus",
-  "name": "sass-maps-plus",
-  "version": "0.9.5",
-  "description": "Advanced map and list-map manipulation for all versions of Sass",
-  "main": "_sass-maps-plus.scss",
+  "name": "@lunelson/sass-maps-plus",
+  "version": "0.8.0",
+  "description": "Advanced Sass map manipulation and debugging",
+  "keywords": [
+    "libsass",
+    "map",
+    "maps",
+    "sass"
+  ],
+  "homepage": "https://github.com/lunelson/sass-maps-plus#readme",
+  "bugs": {
+    "url": "https://github.com/lunelson/sass-maps-plus/issues"
+  },
+  "license": "MIT",
+  "author": "Lu Nelson",
+  "main": "_index.scss",
+  "directories": {
+    "test": "test"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/lunelson/sass-maps-plus.git"
   },
-  "keywords": [
-    "libsass",
-    "sass",
-    "map",
-    "maps",
-    "list",
-    "lists",
-    "data"
-  ],
-  "author": "Lu Nelson",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/lunelson/sass-maps-plus/issues"
+  "scripts": {
+    "test": "gulp test"
   },
-  "homepage": "https://github.com/lunelson/sass-maps-plus",
   "devDependencies": {
-    "gulp": "^3.8.10",
-    "gulp-autoprefixer": "^2.0.0",
-    "gulp-concat": "^2.4.3",
-    "gulp-plumber": "^0.6.6",
-    "gulp-rename": "^1.2.0",
-    "gulp-run": "^1.6.5",
-    "gulp-sass": "git://github.com/xzyfer/gulp-sass#fix/node-sass-bad-maps",
-    "gulp-sourcemaps": "^1.3.0",
-    "gulp-strip-json-comments": "^1.0.2",
-    "gulp-util": "^3.0.1",
-    "node-sass": "git://github.com/xzyfer/node-sass",
-    "vinyl-buffer": "^1.0.0"
+    "gulp": "^3.9.1",
+    "gulp-diff": "^1.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

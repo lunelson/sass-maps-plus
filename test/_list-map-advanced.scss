@@ -1,0 +1,67 @@
+@import "../index";
+
+$list-map: ( alpha 1, beta 2, gamma 3 );
+
+$list-map-z: (
+  alpha (
+    beta (
+      gamma 3
+    )
+  )
+);
+
+.list-maps-advanced {
+  /*
+  get deeply
+  */
+  // expected: '(beta (gamma 3))';
+  recieved: list-map-inspect(list-map-get-z($list-map-z, alpha));
+  // expected: '(gamma 3)';
+  recieved: list-map-inspect(list-map-get-z($list-map-z, alpha, beta));
+  // expected: '(3)';
+  recieved: list-map-inspect(list-map-get-z($list-map-z, alpha, beta, gamma));
+  /*
+  set at existing key
+  */
+  // expected: '(alpha 1, beta 2, gamma 4)';
+  recieved: list-map-inspect(list-map-merge-z($list-map, gamma, 4));
+  // expected: '(alpha 4)';
+  recieved: list-map-inspect(list-map-merge-z($list-map-z, alpha, 4));
+  // expected: '(alpha (beta 4))';
+  recieved: list-map-inspect(list-map-merge-z($list-map-z, alpha, beta, 4));
+  // expected: '(alpha (beta (gamma 4)))';
+  recieved: list-map-inspect(list-map-merge-z($list-map-z, alpha, beta, gamma, 4));
+  /*
+  set at non-existent key
+  */
+  // expected: '(gamma 4)';
+  recieved: list-map-inspect(list-map-merge-z((), gamma, 4));
+  // expected: '(gamma (delta 4))';
+  recieved: list-map-inspect(list-map-merge-z((), gamma, delta, 4));
+  // expected: '(gamma (delta (zeta 4)))';
+  recieved: list-map-inspect(list-map-merge-z((), gamma, delta, zeta, 4));
+  /*
+  merge with existing key
+  */
+  // expected: '(alpha 4, beta 2, gamma 3)';
+  recieved: list-map-inspect(list-map-merge-z($list-map, (alpha 4)));
+  // expected: '(alpha 1, beta 4, gamma 3)';
+  recieved: list-map-inspect(list-map-merge-z($list-map, (beta 4)));
+  // expected: '(alpha 1, beta 2, gamma 4)';
+  recieved: list-map-inspect(list-map-merge-z($list-map, (gamma 4)));
+  // expected: '(alpha 4)';
+  recieved: list-map-inspect(list-map-merge-z($list-map-z, (alpha 4)));
+  // expected: '(alpha (beta 4))';
+  recieved: list-map-inspect(list-map-merge-z($list-map-z, alpha, (beta 4)));
+  // expected: '(alpha (beta (gamma 4)))';
+  recieved: list-map-inspect(list-map-merge-z($list-map-z, alpha, beta, (gamma 4)));
+  /*
+  merge at non-existent key
+  */
+  // expected: '(gamma 4)';
+  recieved: list-map-inspect(list-map-merge-z((), (gamma 4)));
+  // expected: '(gamma (delta 4))';
+  recieved: list-map-inspect(list-map-merge-z((), gamma, (delta 4)));
+  // expected: '(gamma (delta (zeta 4)))';
+  recieved: list-map-inspect(list-map-merge-z((), gamma, delta, (zeta 4)));
+}

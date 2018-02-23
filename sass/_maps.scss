@@ -5,6 +5,14 @@
 //                 | |
 //                 |_|
 
+@function map-key-index($map, $key) {
+  @return index(map-keys($map), $key);
+}
+
+@function map-value-index($map, $value) {
+  @return index(map-values($map), $value);
+}
+
 /// Return previous key from map, given $key
 /// @access public
 /// @group maps
@@ -69,11 +77,16 @@
 /// @param {Arglist} $keys - nested keys
 /// @return {*}
 @function map-get-nested($map, $keys...) {
-  @if length($map) == 0 { @return null; }
+  @if type-of($map) != 'map' {
+    @warn 'map-get-n: input $map is not a map';
+    @return null;
+  }
+  @if length($map) == 0 {
+    @warn 'map-get-n: input $map is empty';
+    @return null;
+  }
   @each $key in $keys {
-    @if type-of($map) != 'map' {
-      @return $map;
-    }
+    @if $map == null { @return $map; }
     $map: map-get($map, $key);
   }
   @return $map;
@@ -107,43 +120,40 @@
   @return $value;
 }
 
+@function __str-times($str, $n: 1) {
+  $output: '';
+  @while $n > 0 {
+    $output: $output + $str;
+    $n: $n - 1;
+  }
+  @return $output;
+}
+
 /// return a pretty-printed string representation of a map
 /// @access public
 /// @group maps
 /// @param {Map} $map - Map to inspect
+/// @param {String} $tab - Indentation character(s) to use. Default is 2 spaces
 /// @param {Number} $level [1] - Internal variable, **do not edit**
 /// @return {String} - String representation of `$map`
-/// @require {function} str-multiply
-/// @require {function} map-inspect
-@function map-inspect($map, $level: 1) {
-  $tab: '  ';
-  $cr: '
-';
-
-  @if type-of($map) != 'map' {
-    @return '#{inspect($map)}';
-  }
-
-  $indent: str-multiply($tab, $level + 1);
-  $output: '(' + $cr + $indent; $i: 1;
-
+/// @require {function} __str-times
+@function map-stringify($map, $tab: '  ', $level: 1) {
+  @if type-of($map) != 'map' { @return '#{inspect($map)}'; }
+  $length: length(map-keys($map));
+  $indent: __str-times($tab, $level);
+  $output: '(\A' + $indent;
+  $i: 1;
   @each $key, $value in $map {
     @if type-of($value) == 'map' {
-      $output: $output + '#{$key}: #{map-inspect($value, $level+1)}';
+      $output: $output + $key + ': ' + map-stringify($value, $tab, $level + 1);
     } @else {
-      $output: $output + '#{$key}: #{$value}';
+      $output: $output + $key + ': ' + $value;
     }
-
-    @if $i < length(map-keys($map)) {
-      $output: $output + ',' + $cr + $indent;
+    @if $i < $length {
+      $output: $output + ',\A' + $indent;
     }
-
     $i: $i + 1;
   }
-
-  $outdent: str-multiply($tab, $level);
-
-  @return $output + $cr + $outdent + ')';
+  $outdent: __str-times($tab, $level - 1);
+  @return unquote($output + '\A' + $outdent + ')');
 }
-
-

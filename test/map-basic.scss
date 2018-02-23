@@ -1,0 +1,43 @@
+@import "../index";
+
+.map-basics {
+  /*
+  map-keys, map-values
+  */
+  expected: 'alpha, beta, gamma';
+  received: inspect(map-keys(( alpha: 1, beta: 2, gamma: 3 )));
+  expected: '1, 2, 3';
+  received: inspect(map-values(( alpha: 1, beta: 2, gamma: 3 )));
+  /*
+  map-has-key
+  */
+  expected: 'false';
+  received: inspect(map-has-key(( alpha: 1, beta: 2, gamma: 3 ), delta));
+  expected: '(true)';
+  received: inspect(map-has-key(( alpha: 1, beta: 2, gamma: 3 ), gamma));
+  /*
+  map-get
+  */
+  expected: '(1)';
+  received: inspect(map-get(( alpha: 1, beta: 2, gamma: 3 ), alpha));
+  expected: '(2)';
+  received: inspect(map-get(( alpha: 1, beta: 2, gamma: 3 ), beta));
+  expected: '(3)';
+  received: inspect(map-get(( alpha: 1, beta: 2, gamma: 3 ), gamma));
+  /*
+  map-remove
+  */
+  expected: '(beta: 2, gamma: 3)';
+  received: inspect(map-remove(( alpha: 1, beta: 2, gamma: 3 ), alpha));
+  /*
+  map-merge
+  */
+  expected: '(alpha: 4, beta: 2, gamma: 3)';
+  received: inspect(map-merge(( alpha: 1, beta: 2, gamma: 3 ), (alpha: 4)));
+  expected: '(alpha: 1, beta: 4, gamma: 3)';
+  received: inspect(map-merge(( alpha: 1, beta: 2, gamma: 3 ), (beta: 4)));
+  expected: '(alpha: 1, beta: 2, gamma: 4)';
+  received: inspect(map-merge(( alpha: 1, beta: 2, gamma: 3 ), (gamma: 4)));
+  expected: '(alpha: 1, beta: 2, gamma: 3, delta: 4)';
+  received: inspect(map-merge(( alpha: 1, beta: 2, gamma: 3 ), (delta: 4)));
+}
