@@ -1,4 +1,4 @@
-## Sass Maps Plus
+## sass-maps-plus
 
 !['sass maps'](sass-maps-plus.png)
 
@@ -29,7 +29,7 @@ This is not currently registered in any package directories but can be installed
 
 ```sh
 # in your project directory
-npm install --save lunelson/sass-maps-plus
+npm install --save @lunelson/sass-maps-plus
 ```
 ```scss
 // in your sass file

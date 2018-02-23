@@ -1,3 +1,5 @@
+@import "../index";
+
 $contexts: (
   alpha: (min-width: 20em),
   beta: (min-width: 30em, test: 'hello'),
