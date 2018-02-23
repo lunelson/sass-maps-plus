@@ -1,6 +1,6 @@
 {
   "name": "@lunelson/sass-maps-plus",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Advanced Sass map manipulation and debugging",
   "keywords": [
     "libsass",
