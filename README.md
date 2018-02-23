@@ -2,6 +2,7 @@
 
 !['sass maps'](sass-maps-plus.png)
 
+[![npm published v](https://img.shields.io/npm/v/@lunelson/sass-maps-plus.svg)]()
 [![Build Status](https://travis-ci.org/lunelson/sass-maps-plus.svg?branch=master)](https://travis-ci.org/lunelson/sass-maps-plus)
 
 **Sass-Maps-Plus** is aimed at providing advanced manipulation (and debugging!) for the Sass `map` data type. They are the successor to [Sass List–Maps](http://github.com/lunelson/sass-list-maps), which polyfilled `maps` in earlier versions of Sass; but use the **native** implementation of `maps` which are in [[ruby] Sass](https://github.com/sass/sass) as of version 3.3, and [LibSass](https://github.com/sass/libsass) as of version 3.1.
