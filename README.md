@@ -1,6 +1,8 @@
-## sass-maps-plus
+# sass-maps-plus
 
 !['sass maps'](sass-maps-plus.png)
+
+[![Build Status](https://travis-ci.org/lunelson/sass-maps-plus.svg?branch=master)](https://travis-ci.org/lunelson/sass-maps-plus)
 
 **Sass-Maps-Plus** is aimed at providing advanced manipulation (and debugging!) for the Sass `map` data type. They are the successor to [Sass List–Maps](http://github.com/lunelson/sass-list-maps), which polyfilled `maps` in earlier versions of Sass; but use the **native** implementation of `maps` which are in [[ruby] Sass](https://github.com/sass/sass) as of version 3.3, and [LibSass](https://github.com/sass/libsass) as of version 3.1.
 
@@ -28,19 +30,10 @@ support Sass `map` data manipulation according to the description
 This is not currently registered in any package directories but can be installed from github via `npm`, and imported in [node-sass](https://github.com/sass/node-sass) and compliant tools, as long as the `includePaths` option includes `'node_modules'`.
 
 ```sh
-# in your project directory
+# in your project
 npm install --save @lunelson/sass-maps-plus
 ```
 ```scss
-// in your sass file
+// in your sass file, assuming you have 'node_modules' in Sass' search path
 @import 'sass-maps-plus/index';
 ```
-
-#### TODO
-
-- [ ] write tests
-- [ ] update sassdoc to gh-pages
-- [ ] update npm
-- [ ] update bower
-- [ ] update sache
-- [ ] update gemspec
