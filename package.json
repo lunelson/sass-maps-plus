@@ -12,27 +12,43 @@
   "bugs": {
     "url": "https://github.com/lunelson/sass-maps-plus/issues"
   },
-  "license": "MIT",
-  "author": "Lu Nelson",
-  "main": "_index.scss",
-  "directories": {
-    "start": "gulp",
-    "test": "gulp test"
-  },
   "repository": {
     "type": "git",
     "url": "git://github.com/lunelson/sass-maps-plus.git"
   },
+  "license": "MIT",
+  "author": "Lu Nelson",
+  "main": "_index.scss",
+  "directories": {
+    "test": "tests"
+  },
   "scripts": {
-    "test": "gulp test"
+    "links": "npm link @lunelson/sass-throw",
+    "browser": "penny serve tests/_browser",
+    "test": "ava"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-diff": "^1.0.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0"
+    "@lunelson/penny": "^1.2.1",
+    "@lunelson/sass-throw": "^1.0.2",
+    "ava": "^1.0.1",
+    "micromatch": "^3.1.10",
+    "node-sass": "^4.11.0",
+    "sass": "^1.15.2",
+    "write": "^1.0.3"
+  },
+  "peerDependencies": {
+    "@lunelson/sass-throw": "^1.0.2"
   },
   "publishConfig": {
     "access": "public"
+  },
+  "ava": {
+    "files": [
+      "tests/*{.js,.scss}"
+    ],
+    "sources": [
+      "src/**/*.scss",
+      "!**/_*/**"
+    ]
   }
 }
