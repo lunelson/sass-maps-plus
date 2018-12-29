@@ -14,18 +14,27 @@ $map-nested: (
 );
 
 .map-set {
-  /* errors */
-  expect: "ERROR: argument $map in map-set($map, $keys...) is not a map";
+
+  /* ERROR when $map is not a map */
+  expect: "ERROR: argument `$map` of `map-set($map, $keys...)` is not a map";
   result: quote(inspect(map-set(null, (gamma: 4))));
-  expect: "ERROR: argument $map in map-set($map, $keys...) is not a map";
-  result: quote(inspect(map-set((), (gamma: 4))));
-  expect: "ERROR: rest-argument $keys-and-value in map-set($map, $keys-and-value...) not provided";
+  result: quote(inspect(map-set('hello world', (gamma: 4))));
+
+  /* ERROR when $keys-and-value length is 0 */
+  expect: "ERROR: rest-argument `$keys-and-value` of `map-set($map, $keys-and-value...)` is missing";
   result: quote(inspect(map-set($map)));
-  expect: "ERROR: at least one $key required in map-set($map, $keys-and-value...)";
+
+  /* ERROR when $keys length is 0 */
+  expect: "ERROR: at least one `$key` argument required in `map-set($map, $keys-and-value...)`";
+  result: quote(inspect(map-set((), (gamma: 4))));
+  result: quote(inspect(map-set($map, 4)));
   result: quote(inspect(map-set($map, ())));
-  /* normal */
+
+  /* @return map with $value set at $key*/
   expect: "(alpha: 1, beta: 2, gamma: 4)";
   result: quote(inspect(map-set($map, gamma, 4)));
+
+  /* @return map with $value set at nested $keys path*/
   expect: "(alpha: 4)";
   result: quote(inspect(map-set($map-nested, alpha, 4)));
   expect: "(alpha: (beta: 4, epsilon: 5))";

@@ -1,0 +1,18 @@
+@import '@lunelson/sass-throw/index';
+@import '../index';
+
+$sass-throw-catch: true;
+$map: ( alpha: 1, beta: 2, gamma: 3 );
+$map-nested: (
+  alpha: (
+    beta: (
+      gamma: 3,
+      delta: 4,
+    ),
+    epsilon: 5,
+  ),
+);
+
+.map-inspect {
+
+}

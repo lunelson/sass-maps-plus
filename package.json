@@ -31,10 +31,12 @@
     "@lunelson/sass-throw": "^2.0.0",
     "ava": "^1.0.1",
     "del": "^3.0.0",
-    "micromatch": "^3.1.10",
     "node-sass": "^4.11.0",
     "sass": "^1.15.2",
     "write": "^1.0.3"
+  },
+  "peerDependencies": {
+    "@lunelson/sass-throw": "^2.0.0"
   },
   "publishConfig": {
     "access": "public"
@@ -44,9 +46,7 @@
       "tests/*{.js,.scss}"
     ],
     "sources": [
-      "_index.scss",
-      "scss/**/*.scss",
-      "!**/_*/**"
+      "_index.scss"
     ]
   }
 }

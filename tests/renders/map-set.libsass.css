@@ -1,16 +1,20 @@
 .map-set {
-  /* errors */
-  expect: "ERROR: argument $map in map-set($map, $keys...) is not a map";
+  /* ERROR when $map is not a map */
+  expect: "ERROR: argument `$map` of `map-set($map, $keys...)` is not a map";
   result: "ERROR: argument `$map` of `map-set($map, $keys...)` is not a map";
-  expect: "ERROR: argument $map in map-set($map, $keys...) is not a map";
-  result: "ERROR: at least one `$key` argument required in `map-set($map, $keys-and-value...)`";
-  expect: "ERROR: rest-argument $keys-and-value in map-set($map, $keys-and-value...) not provided";
+  result: "ERROR: argument `$map` of `map-set($map, $keys...)` is not a map";
+  /* ERROR when $keys-and-value length is 0 */
+  expect: "ERROR: rest-argument `$keys-and-value` of `map-set($map, $keys-and-value...)` is missing";
   result: "ERROR: rest-argument `$keys-and-value` of `map-set($map, $keys-and-value...)` is missing";
-  expect: "ERROR: at least one $key required in map-set($map, $keys-and-value...)";
+  /* ERROR when $keys length is 0 */
+  expect: "ERROR: at least one `$key` argument required in `map-set($map, $keys-and-value...)`";
   result: "ERROR: at least one `$key` argument required in `map-set($map, $keys-and-value...)`";
-  /* normal */
+  result: "ERROR: at least one `$key` argument required in `map-set($map, $keys-and-value...)`";
+  result: "ERROR: at least one `$key` argument required in `map-set($map, $keys-and-value...)`";
+  /* @return map with $value set at $key*/
   expect: "(alpha: 1, beta: 2, gamma: 4)";
   result: "(alpha: 1, beta: 2, gamma: 4)";
+  /* @return map with $value set at nested $keys path*/
   expect: "(alpha: 4)";
   result: "(alpha: 4)";
   expect: "(alpha: (beta: 4, epsilon: 5))";
