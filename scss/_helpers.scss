@@ -1,0 +1,20 @@
+@function --smp-str-times($str, $n: 1) {
+  $output: '';
+  @while $n > 0 {
+    $output: $output + $str;
+    $n: $n - 1;
+  }
+  @return $output;
+}
+
+@function --smp-list-slice($list, $start: 1, $end: length($list), $separator: list-separator($list)) {
+  $output: ();
+
+  @if $start >= 1 and $end >= $start {
+    @for $i from $start through $end {
+      $output: append($output, nth($list, $i), $separator);
+    }
+  }
+
+  @return $output;
+}

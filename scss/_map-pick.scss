@@ -1,0 +1,13 @@
+@function map-pick($map, $keys...) {
+  @if type-of($map) != 'map' {
+    @return error('argument $map in map-pick($map, $keys...) is not a map');
+  }
+  @if length($keys) == 0 {
+    @return error('rest-argument $keys in map-pick($map, $keys...) not provided');
+  }
+  $nots: ();
+  @each $key in map-keys($map) {
+    @if not index($keys, $key) { $nots: append($nots, $key); }
+  }
+  @return map-remove($map, $nots...);
+}

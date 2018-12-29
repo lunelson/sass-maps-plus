@@ -24,20 +24,17 @@
   },
   "scripts": {
     "links": "npm link @lunelson/sass-throw",
-    "browser": "penny serve tests/_browser",
-    "test": "ava"
+    "test": "ava",
+    "start": "ava --watch"
   },
   "devDependencies": {
-    "@lunelson/penny": "^1.2.1",
-    "@lunelson/sass-throw": "^1.0.2",
+    "@lunelson/sass-throw": "^2.0.0",
     "ava": "^1.0.1",
+    "del": "^3.0.0",
     "micromatch": "^3.1.10",
     "node-sass": "^4.11.0",
     "sass": "^1.15.2",
     "write": "^1.0.3"
-  },
-  "peerDependencies": {
-    "@lunelson/sass-throw": "^1.0.2"
   },
   "publishConfig": {
     "access": "public"
@@ -47,7 +44,8 @@
       "tests/*{.js,.scss}"
     ],
     "sources": [
-      "src/**/*.scss",
+      "_index.scss",
+      "scss/**/*.scss",
       "!**/_*/**"
     ]
   }

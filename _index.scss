@@ -6,13 +6,174 @@
 /// |___/\__,_|___/___/      |_| |_| |_|\__,_| .__/|___/      | .__/|_|\__,_|___/
 ///                                          | |              | |
 ///                                          |_|              |_|
-///  Sass Maps Plus 0.9.2
-///  Advanced map and list-map manipulation for all versions of scss
-///  MIT License
-///  @author Lu Nelson
 
-@import 'scss/_utils.scss';
-@import 'scss/_maps.scss';
-@import 'scss/_multi-maps.scss';
-@import 'scss/_list-maps.scss';
-@import 'scss/_aliases.scss';
+/////////////////////////////////////////////
+////////////////// private //////////////////
+/////////////////////////////////////////////
+
+@function --smp-str-times($str, $n: 1) {
+  $output: '';
+  @while $n > 0 {
+    $output: $output + $str;
+    $n: $n - 1;
+  }
+  @return $output;
+}
+
+@function --smp-list-slice($list, $start: 1, $end: length($list), $separator: list-separator($list)) {
+  $output: ();
+  @if $start >= 1 and $end >= $start {
+    @for $i from $start through $end {
+      $output: append($output, nth($list, $i), $separator);
+    }
+  }
+  @return $output;
+}
+
+@function --smp-is-map($map) {
+  @return type-of($map) == "map" or (type-of($map) == "list" and length($map) == 0);
+}
+
+/////////////////////////////////////////////
+/////////////////// public //////////////////
+/////////////////////////////////////////////
+
+@function map-invert($map) {
+  @if not --smp-is-map($map) {
+    @return error('argument `$map` of map-invert($map) must be a map');
+  }
+  $result: ();
+  @each $key, $value in $map {
+    $result: map-merge($result, ($value: $key));
+  }
+  @return $result;
+}
+
+@function map-pick($map, $keys...) {
+  @if not --smp-is-map($map) {
+    @return error('argument `$map` of map-pick($map, $keys...) must be a map');
+  }
+  @if length($keys) == 0 {
+    @return error('rest-argument $keys in map-pick($map, $keys...) not provided');
+  }
+  $nots: ();
+  @each $key in map-keys($map) {
+    @if not index($keys, $key) { $nots: append($nots, $key); }
+  }
+  @return map-remove($map, $nots...);
+}
+
+@function map-omit($map, $keys...) {
+  @if not --smp-is-map($map) {
+    @return error('argument `$map` of map-omit($map, $keys...) must be a map');
+  }
+  @if length($keys) == 0 {
+    @return error('rest-argument $keys in map-omit($map, $keys...) not provided');
+  }
+  @return map-remove($map, $keys...);
+}
+
+/////////////////////////////////////////////
+////////////////// map-get //////////////////
+/////////////////////////////////////////////
+
+$native-map-get: get-function('map-get');
+@function native-map-get($map, $key) { @return call($native-map-get, $map, $key); }
+
+@function map-get($map, $keys...) {
+  @if length($map) == 0 { @return null; }
+  @if not --smp-is-map($map) {
+    @return error('argument `$map` of `map-get($map, $keys...)` must be a map');
+  }
+  @if length($keys) == 0 {
+    @return error('function `map-get($map, $keys...)` is missing rest-argument `$keys`');
+  }
+  @each $key in $keys {
+    @if $map == null { @return $map; }
+    $map: native-map-get($map, $key);
+  }
+  @return $map;
+}
+
+/////////////////////////////////////////////
+///////////////// map-merge /////////////////
+/////////////////////////////////////////////
+
+$native-map-merge: get-function('map-merge');
+@function native-map-merge($map1, $map2) { @return call($native-map-merge, $map1, $map2); }
+
+@function map-merge($map1, $keys-and-map2...) {
+  @if not --smp-is-map($map1) {
+    @return error('argument `$map1` of `map-merge($map1, $keys-and-map2...)` must be a map');
+  }
+  @if length($keys-and-map2) == 0 {
+    @return error('rest-argument `$keys-and-map2...` of map-merge($map1, $keys-and-map2...) is missing');
+  }
+  $keys-and-map2-length: length($keys-and-map2);
+  $key-length: $keys-and-map2-length - 1;
+  $map2: nth($keys-and-map2, $keys-and-map2-length);
+  @if not --smp-is-map($map2) {
+    @return error('argument `$map2` of `map-merge($map1, $keys-and-map2...)` must be a map');
+  }
+  @if $key-length == 0 {
+    $map2: native-map-merge($map1, $map2);
+  } @else {
+    @for $i from 0 through $key-length {
+      $new: if($i == 0, $map2, (nth($keys-and-map2, $keys-and-map2-length - $i): $map2));
+      $old: if($i == $key-length, $map1, map-get($map1, --smp-list-slice($keys-and-map2, 1, $key-length - $i)...) or ());
+      $map2: if(type-of($old) == 'map', native-map-merge($old, $new), $new);
+    }
+  }
+  @return $map2;
+}
+
+/////////////////////////////////////////////
+////////////////// map-set //////////////////
+/////////////////////////////////////////////
+
+@function map-set($map, $keys-and-value...) {
+  @if not --smp-is-map($map) {
+    @return error('argument `$map` of `map-set($map, $keys...)` is not a map');
+  }
+  @if length($keys-and-value) == 0 {
+    @return error('rest-argument `$keys-and-value` of `map-set($map, $keys-and-value...)` is missing');
+  }
+  $keys-and-value-length: length($keys-and-value);
+  $key-length: $keys-and-value-length - 1;
+  $value: nth($keys-and-value, $keys-and-value-length);
+  @if $key-length == 0 {
+    @return error('at least one `$key` argument required in `map-set($map, $keys-and-value...)`');
+  } @else {
+    @for $i from 1 through $key-length {
+      $new: (nth($keys-and-value, $keys-and-value-length - $i): $value);
+      $old: if($i == $key-length, $map, map-get($map, --smp-list-slice($keys-and-value, 1, $key-length - $i)...) or ());
+      $value: if(type-of($old) == 'map', native-map-merge($old, $new), $new);
+    }
+  }
+  @return $value;
+}
+
+/////////////////////////////////////////////
+//////////////// map-inspect ////////////////
+/////////////////////////////////////////////
+
+@function map-inspect($map, $tab: '  ', $level: 1) {
+  @if type-of($map) != 'map' { @return '#{inspect($map)}'; }
+  $length: length(map-keys($map));
+  $indent: --smp-str-times($tab, $level);
+  $output: '(\A' + $indent;
+  $i: 1;
+  @each $key, $value in $map {
+    @if type-of($value) == 'map' {
+      $output: $output + $key + ': ' + map-inspect($value, $tab, $level + 1);
+    } @else {
+      $output: $output + $key + ': ' + $value;
+    }
+    @if $i < $length {
+      $output: $output + ',\A' + $indent;
+    }
+    $i: $i + 1;
+  }
+  $outdent: --smp-str-times($tab, $level - 1);
+  @return unquote($output + '\A' + $outdent + ')');
+}

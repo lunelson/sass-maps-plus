@@ -1,0 +1,24 @@
+.map-set {
+  /* errors */
+  expect: "ERROR: argument $map in map-set($map, $keys...) is not a map";
+  result: "ERROR: argument `$map` of `map-set($map, $keys...)` is not a map";
+  expect: "ERROR: argument $map in map-set($map, $keys...) is not a map";
+  result: "ERROR: at least one `$key` argument required in `map-set($map, $keys-and-value...)`";
+  expect: "ERROR: rest-argument $keys-and-value in map-set($map, $keys-and-value...) not provided";
+  result: "ERROR: rest-argument `$keys-and-value` of `map-set($map, $keys-and-value...)` is missing";
+  expect: "ERROR: at least one $key required in map-set($map, $keys-and-value...)";
+  result: "ERROR: at least one `$key` argument required in `map-set($map, $keys-and-value...)`";
+  /* normal */
+  expect: "(alpha: 1, beta: 2, gamma: 4)";
+  result: "(alpha: 1, beta: 2, gamma: 4)";
+  expect: "(alpha: 4)";
+  result: "(alpha: 4)";
+  expect: "(alpha: (beta: 4, epsilon: 5))";
+  result: "(alpha: (beta: 4, epsilon: 5))";
+  expect: "(alpha: (beta: 4))";
+  result: "(alpha: (beta: 4))";
+  expect: "(alpha: (beta: (gamma: 4, delta: 4), epsilon: 5))";
+  result: "(alpha: (beta: (gamma: 4, delta: 4), epsilon: 5))";
+  expect: "(alpha: (beta: (gamma: 4), epsilon: 5))";
+  result: "(alpha: (beta: (gamma: 4), epsilon: 5))";
+}

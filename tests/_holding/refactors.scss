@@ -1,0 +1,278 @@
+@import '@lunelson/sass-throw/index';
+$sass-throw-catch: true;
+
+/////////////////////////////////////////////
+////////////////// private //////////////////
+/////////////////////////////////////////////
+
+@function --smp-str-times($str, $n: 1) {
+  $output: '';
+  @while $n > 0 {
+    $output: $output + $str;
+    $n: $n - 1;
+  }
+  @return $output;
+}
+
+@function --smp-list-slice($list, $start: 1, $end: length($list), $separator: list-separator($list)) {
+  $output: ();
+
+  @if $start >= 1 and $end >= $start {
+    @for $i from $start through $end {
+      $output: append($output, nth($list, $i), $separator);
+    }
+  }
+
+  @return $output;
+}
+
+/////////////////////////////////////////////
+/////////////////// public //////////////////
+/////////////////////////////////////////////
+
+@function map-invert($map) {
+  @if type-of($map) != 'map' {
+    @return error('argument $map in map-invert($map) is not a map');
+  }
+  $result: ();
+  @each $key, $value in $map {
+    $result: map-merge($result, ($value: $key));
+  }
+  @return $result;
+}
+
+@function map-pick($map, $keys...) {
+  @if type-of($map) != 'map' {
+    @return error('argument $map in map-pick($map, $keys...) is not a map');
+  }
+  @if length($keys) == 0 {
+    @return error('rest-argument $keys in map-pick($map, $keys...) not provided');
+  }
+  $nots: ();
+  @each $key in map-keys($map) {
+    @if not index($keys, $key) { $nots: append($nots, $key); }
+  }
+  @return map-remove($map, $nots...);
+}
+
+@function map-omit($map, $keys...) {
+  @if type-of($map) != 'map' {
+    @return error('argument $map in map-omit($map, $keys...) is not a map');
+  }
+  @if length($keys) == 0 {
+    @return error('rest-argument $keys in map-omit($map, $keys...) not provided');
+  }
+  @return map-remove($map, $keys...);
+}
+
+@function map-get-nested($map, $keys...) {
+  @if type-of($map) != 'map' {
+    @return error('argument $map in map-get-nested($map, $keys...) is not a map');
+  }
+  @if length($keys) == 0 {
+    @return error('rest-argument $keys in map-get-nested($map, $keys...) not provided');
+  }
+  @each $key in $keys {
+    @if $map == null { @return $map; }
+    $map: map-get($map, $key);
+  }
+  @return $map;
+}
+
+@function map-merge-nested($map, $keys-and-value...) {
+  @if type-of($map) != 'map' {
+    @return error('argument $map in map-merge-nested($map, $keys...) is not a map');
+  }
+  @if length($keys-and-value) == 0 {
+    @return error('rest-argument $keys-and-value in map-merge-nested($map, $keys-and-value...) not provided');
+  }
+  $keys-and-value-length: length($keys-and-value);
+  $key-length: $keys-and-value-length - 1;
+  $value: nth($keys-and-value, $keys-and-value-length);
+  $value-is-map: type-of($value) == 'map';
+
+  @if $key-length == 0 {
+    $value: map-merge($map, if($value-is-map or length($value) == 0, $value, ($value: ())));
+  } @else {
+    @for $i from if($value-is-map, 0, 1) through $key-length {
+      $new: if($i == 0, $value, (nth($keys-and-value, $keys-and-value-length - $i): $value));
+      $old: if($i == $key-length, $map, map-get-nested($map, --smp-list-slice($keys-and-value, 1, $key-length - $i)...) or ());
+      $value: if(type-of($old) == 'map', map-merge($old, $new), $new);
+    }
+  }
+
+  @return $value;
+}
+
+@function map-set-nested($map, $keys-and-value...) {
+  @if type-of($map) != 'map' {
+    @return error('argument $map in map-set-nested($map, $keys...) is not a map');
+  }
+  @if length($keys-and-value) == 0 {
+    @return error('rest-argument $keys-and-value in map-set-nested($map, $keys-and-value...) not provided');
+  }
+  $keys-and-value-length: length($keys-and-value);
+  $key-length: $keys-and-value-length - 1;
+  $value: nth($keys-and-value, $keys-and-value-length);
+  $value-is-map: type-of($value) == 'map';
+
+  @if $key-length == 0 {
+    @return error('at least one $key required in map-set-nested($map, $keys-and-value...)');
+  } @else {
+    @for $i from 1 through $key-length {
+      $new: (nth($keys-and-value, $keys-and-value-length - $i): $value);
+      $old: if($i == $key-length, $map, map-get-nested($map, --smp-list-slice($keys-and-value, 1, $key-length - $i)...) or ());
+      $value: if(type-of($old) == 'map', map-merge($old, $new), $new);
+    }
+  }
+
+  @return $value;
+}
+
+@function map-inspect($map, $tab: '  ', $level: 1) {
+  @if type-of($map) != 'map' { @return '#{inspect($map)}'; }
+  $length: length(map-keys($map));
+  $indent: --smp-str-times($tab, $level);
+  $output: '(\A' + $indent;
+  $i: 1;
+  @each $key, $value in $map {
+    @if type-of($value) == 'map' {
+      $output: $output + $key + ': ' + map-inspect($value, $tab, $level + 1);
+    } @else {
+      $output: $output + $key + ': ' + $value;
+    }
+    @if $i < $length {
+      $output: $output + ',\A' + $indent;
+    }
+    $i: $i + 1;
+  }
+  $outdent: --smp-str-times($tab, $level - 1);
+  @return unquote($output + '\A' + $outdent + ')');
+}
+
+
+/////////////////////////////////////////////
+//////////////// merge-nested ///////////////
+/////////////////////////////////////////////
+
+$map: ( alpha: 1, beta: 2, gamma: 3 );
+
+$map-nested: (
+  alpha: (
+    beta: (
+      gamma: 3,
+      delta: 4,
+    ),
+    epsilon: 5,
+  ),
+);
+
+/*
+map-inspect
+$map-nested: #{map-inspect($map-nested)}
+*/
+
+.map-invert {
+  /* errors */
+  expect: "argument $map in map-invert($map) is not a map";
+  result: quote(inspect(map-invert(null)));
+  expect: "argument $map in map-invert($map) is not a map";
+  result: quote(inspect(map-invert(())));
+  /* normal */
+  expect: "(1: alpha, 2: beta, 3: gamma)";
+  result: quote(inspect(map-invert($map)));
+  expect: "((beta: (gamma: 3, delta: 4)): alpha)";
+  result: quote(inspect(map-invert($map-nested)));
+}
+.map-pick {
+  /* errors */
+  expect: "argument $map in map-pick($map, $keys...) is not a map";
+  result: quote(inspect(map-pick(null, alpha)));
+  expect: "argument $map in map-pick($map, $keys...) is not a map";
+  result: quote(inspect(map-pick((), alpha)));
+  /* normal */
+  expect: "(alpha: 1)";
+  result: quote(inspect(map-pick($map, alpha)));
+  expect: "(beta: 2, gamma: 3)";
+  result: quote(inspect(map-pick($map, beta, gamma)));
+}
+
+.map-omit {
+  /* errors */
+  expect: "argument $map in map-omit($map, $keys...) is not a map";
+  result: quote(inspect(map-omit(null, alpha)));
+  expect: "argument $map in map-omit($map, $keys...) is not a map";
+  result: quote(inspect(map-omit((), alpha)));
+  /* normal */
+  expect: "(beta: 2, gamma: 3)";
+  result: quote(inspect(map-omit($map, alpha)));
+  expect: "(alpha: 1)";
+  result: quote(inspect(map-omit($map, beta, gamma)));
+}
+
+.map-get-nested {
+  /* errors */
+  expect: "argument $map in map-get-nested($map, $keys...) is not a map";
+  result: quote(inspect(map-get-nested(null, alpha)));
+  expect: "argument $map in map-get-nested($map, $keys...) is not a map";
+  result: quote(inspect(map-get-nested((), alpha)));
+  expect: "rest-argument $keys in map-get-nested($map, $keys...) not provided";
+  result: quote(inspect(map-get-nested($map)));
+  /* normal */
+  expect: "(beta: (gamma: 3, delta: 4))";
+  result: quote(inspect(map-get-nested($map-nested, alpha)));
+  expect: "(gamma: 3)";
+  result: quote(inspect(map-get-nested($map-nested, alpha, beta)));
+  expect: "3";
+  result: quote(inspect(map-get-nested($map-nested, alpha, beta, gamma)));
+}
+
+.map-merge-nested {
+  /* errors */
+  expect: "argument $map in map-merge-nested($map, $keys...) is not a map";
+  result: quote(inspect(map-merge-nested(null, (gamma: 4))));
+  expect: "argument $map in map-merge-nested($map, $keys...) is not a map";
+  result: quote(inspect(map-merge-nested((), (gamma: 4))));
+  expect: "rest-argument $keys-and-value in map-merge-nested($map, $keys-and-value...) not provided";
+  result: quote(inspect(map-merge-nested($map)));
+  expect: "(alpha: 1, beta: 2, gamma: 3)";
+  result: quote(inspect(map-merge-nested($map, ())));
+  /* normal */
+  expect: "(alpha: 1, beta: 2, gamma: 4)";
+  result: quote(inspect(map-merge-nested($map, (gamma: 4))));
+  result: quote(inspect(map-merge-nested($map, gamma, 4)));
+  expect: "(alpha: 4)";
+  result: quote(inspect(map-merge-nested($map-nested, (alpha: 4))));
+  result: quote(inspect(map-merge-nested($map-nested, alpha, 4)));
+  expect: "(alpha: (beta: 4, epsilon: 5))";
+  result: quote(inspect(map-merge-nested($map-nested, alpha, (beta: 4))));
+  result: quote(inspect(map-merge-nested($map-nested, alpha, beta, 4)));
+  expect: "(alpha: (beta: (gamma: 4, delta: 4)))";
+  result: quote(inspect(map-merge-nested($map-nested, alpha, beta, (gamma: 4))));
+  result: quote(inspect(map-merge-nested($map-nested, alpha, beta, gamma, 4)));
+}
+
+.map-set-nested {
+  /* errors */
+  expect: "argument $map in map-set-nested($map, $keys...) is not a map";
+  result: quote(inspect(map-set-nested(null, (gamma: 4))));
+  expect: "argument $map in map-set-nested($map, $keys...) is not a map";
+  result: quote(inspect(map-set-nested((), (gamma: 4))));
+  expect: "rest-argument $keys-and-value in map-set-nested($map, $keys-and-value...) not provided";
+  result: quote(inspect(map-set-nested($map)));
+  expect: "at least one $key required in map-set-nested($map, $keys-and-value...)";
+  result: quote(inspect(map-set-nested($map, ())));
+  /* normal */
+  expect: "(alpha: 1, beta: 2, gamma: 4)";
+  result: quote(inspect(map-set-nested($map, gamma, 4)));
+  expect: "(alpha: 4)";
+  result: quote(inspect(map-set-nested($map-nested, alpha, 4)));
+  expect: "(alpha: (beta: 4, epsilon: 5))";
+  result: quote(inspect(map-set-nested($map-nested, alpha, beta, 4)));
+  expect: "(alpha: (beta: 4))";
+  result: quote(inspect(map-set-nested($map-nested, alpha, (beta: 4))));
+  expect: "(alpha: (beta: (gamma: 4, delta: 4), epsilon: 5))";
+  result: quote(inspect(map-set-nested($map-nested, alpha, beta, gamma, 4)));
+  expect: "(alpha: (beta: (gamma: 4), epsilon: 5))";
+  result: quote(inspect(map-set-nested($map-nested, alpha, beta, (gamma: 4))));
+}

@@ -1,0 +1,20 @@
+@function map-inspect($map, $tab: '  ', $level: 1) {
+  @if type-of($map) != 'map' { @return '#{inspect($map)}'; }
+  $length: length(map-keys($map));
+  $indent: --smp-str-times($tab, $level);
+  $output: '(\A' + $indent;
+  $i: 1;
+  @each $key, $value in $map {
+    @if type-of($value) == 'map' {
+      $output: $output + $key + ': ' + map-inspect($value, $tab, $level + 1);
+    } @else {
+      $output: $output + $key + ': ' + $value;
+    }
+    @if $i < $length {
+      $output: $output + ',\A' + $indent;
+    }
+    $i: $i + 1;
+  }
+  $outdent: --smp-str-times($tab, $level - 1);
+  @return unquote($output + '\A' + $outdent + ')');
+}
