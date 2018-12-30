@@ -2,6 +2,9 @@
   /* @return null when $map is empty map/list */
   expect: "null";
   result: "null";
+  /* @return null when $key is not found at any level */
+  result: "null";
+  result: "null";
   /* ERROR when $map is not a map */
   expect: "ERROR: argument `$map` of `map-get($map, $keys...)` must be a map";
   result: "ERROR: argument `$map` of `map-get($map, $keys...)` must be a map";
@@ -14,5 +17,6 @@
   expect: "(gamma: 3, delta: 4)";
   result: "(gamma: 3, delta: 4)";
   expect: "3";
+  result: "3";
   result: "3";
 }

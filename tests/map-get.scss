@@ -19,6 +19,10 @@ $map-nested: (
   expect: "null";
   result: quote(inspect(map-get((), alpha)));
 
+  /* @return null when $key is not found at any level */
+  result: quote(inspect(map-get($map, gamma, foo, bar)));
+  result: quote(inspect(map-get($map-nested, alpha, beta, foo, bar)));
+
   /* ERROR when $map is not a map */
   expect: "ERROR: argument `$map` of `map-get($map, $keys...)` must be a map";
   result: quote(inspect(map-get(null, alpha)));
@@ -34,4 +38,5 @@ $map-nested: (
   result: quote(inspect(map-get($map-nested, alpha, beta)));
   expect: "3";
   result: quote(inspect(map-get($map-nested, alpha, beta, gamma)));
+  result: quote(inspect(map-get($map, gamma)));
 }

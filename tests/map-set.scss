@@ -45,4 +45,12 @@ $map-nested: (
   result: quote(inspect(map-set($map-nested, alpha, beta, gamma, 4)));
   expect: "(alpha: (beta: (gamma: 4), epsilon: 5))";
   result: quote(inspect(map-set($map-nested, alpha, beta, (gamma: 4))));
+
+  /* @return set $value, creating intermediate keys if necessary */
+  expect: "(foo: (bar: (baz: 2)))";
+  result: quote(inspect(map-set((), foo, bar, (baz: 2))));
+  result: quote(inspect(map-set((), foo, bar, baz, 2)));
+  expect: "(alpha: 1, beta: 2, gamma: (foo: (bar: (baz: 2))))";
+  result: quote(inspect(map-set($map, gamma, foo, bar, (baz: 2))));
+  result: quote(inspect(map-set($map, gamma, foo, bar, baz, 2)));
 }

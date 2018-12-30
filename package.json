@@ -25,7 +25,7 @@
   "scripts": {
     "links": "npm link @lunelson/sass-throw",
     "test": "ava",
-    "start": "ava --watch"
+    "start": "ava --watch --verbose --serial --fail-fast"
   },
   "devDependencies": {
     "@lunelson/sass-throw": "^2.0.0",

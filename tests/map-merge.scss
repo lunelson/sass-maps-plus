@@ -40,7 +40,7 @@ $map-nested: (
   expect:  "(gamma: 4)";
   result: quote(inspect(map-merge((), (gamma: 4))));
 
-  /* @return merge of $map2 against $map1 value at $keys... */
+  /* @return merge, $map2 -> $map1 at $keys... */
   expect: "(alpha: 1, beta: 2, gamma: 4)";
   result: quote(inspect(map-merge($map, (gamma: 4))));
   expect: "(alpha: 4)";
@@ -49,4 +49,10 @@ $map-nested: (
   result: quote(inspect(map-merge($map-nested, alpha, (beta: 4))));
   expect: "(alpha: (beta: (gamma: 4, delta: 4), epsilon: 5))";
   result: quote(inspect(map-merge($map-nested, alpha, beta, (gamma: 4))));
+
+  /* @return merge, $map2 -> $map1, creating intermediate keys if necessary */
+  expect: "(foo: (bar: (baz: 2)))";
+  result: quote(inspect(map-merge((), foo, bar, (baz: 2))));
+  expect: "(alpha: 1, beta: 2, gamma: (foo: (bar: (baz: 2))))";
+  result: quote(inspect(map-merge($map, gamma, foo, bar, (baz: 2))));
 }

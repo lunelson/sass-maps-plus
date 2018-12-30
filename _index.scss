@@ -92,7 +92,8 @@ $native-map-get: get-function('map-get');
     @return error('function `map-get($map, $keys...)` is missing rest-argument `$keys`');
   }
   @each $key in $keys {
-    @if $map == null { @return $map; }
+    // @if $map == null { @return $map; }
+    @if not --smp-is-map($map) { @return null; }
     $map: native-map-get($map, $key);
   }
   @return $map;
@@ -123,7 +124,9 @@ $native-map-merge: get-function('map-merge');
   } @else {
     @for $i from 0 through $key-length {
       $new: if($i == 0, $map2, (nth($keys-and-map2, $keys-and-map2-length - $i): $map2));
-      $old: if($i == $key-length, $map1, map-get($map1, --smp-list-slice($keys-and-map2, 1, $key-length - $i)...) or ());
+      $tmp: --smp-list-slice($keys-and-map2, 1, $key-length - $i);
+      // @debug inspect($tmp);
+      $old: if($i == $key-length, $map1, map-get($map1, $tmp...) or ());
       $map2: if(type-of($old) == 'map', native-map-merge($old, $new), $new);
     }
   }
