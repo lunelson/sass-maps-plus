@@ -1,0 +1,11 @@
+.map-invert {
+  /* ERROR if $map is not a map */
+  expect: "ERROR: argument `$map` of map-invert($map) must be a map";
+  result: '"ERROR: argument `$map` of map-invert($map) must be a map"';
+  result: '"ERROR: argument `$map` of map-invert($map) must be a map"';
+  /* @return inverted map */
+  expect: "(1: alpha, 2: beta, 3: gamma)";
+  result: "(1: alpha, 2: beta, 3: gamma)";
+  expect: "((beta: (gamma: 3, delta: 4), epsilon: 5): alpha)";
+  result: "((beta: (gamma: 3, delta: 4), epsilon: 5): alpha)";
+}

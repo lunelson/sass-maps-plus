@@ -14,5 +14,22 @@ $map-nested: (
 );
 
 .map-pick {
-
+  /* ERROR if $map is not a map */
+  expect: "ERROR: argument `$map` of map-pick($map, $keys...) must be a map";
+  result: quote(inspect(map-pick(null, foo)));
+  result: quote(inspect(map-pick('foo', foo)));
+  /* @return empty map if...
+    - $map is empty
+    - no $keys found
+    - length($keys) == 0
+  */
+  expect: "()";
+  result: quote(inspect(map-pick((), foo)));
+  result: quote(inspect(map-pick($map)));
+  result: quote(inspect(map-pick($map, foo)));
+  /* @return new map with only found $keys included */
+  expect: "(beta: 2)";
+  result: quote(inspect(map-pick($map, beta)));
+  expect: "(beta: 2, gamma: 3)";
+  result: quote(inspect(map-pick($map, beta, gamma)));
 }

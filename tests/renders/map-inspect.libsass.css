@@ -1,0 +1,24 @@
+/*
+@return normal inspect() output, if $map is not a map
+null: null
+list: 1 2 3
+string: hello world
+boolean: true
+*/
+/*
+@return a stringification of $map, pretty-printed if libsass
+$map: (
+  alpha: 1,
+  beta: 2,
+  gamma: 3
+)
+$map-nested: (
+  alpha: (
+    beta: (
+      gamma: 3,
+      delta: 4
+    ),
+    epsilon: 5
+  )
+)
+*/

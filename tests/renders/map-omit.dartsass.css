@@ -1,0 +1,18 @@
+.map-omit {
+  /* ERROR if $map is not a map */
+  expect: "ERROR: argument `$map` of map-omit($map, $keys...) must be a map";
+  result: '"ERROR: argument `$map` of map-omit($map, $keys...) must be a map"';
+  result: '"ERROR: argument `$map` of map-omit($map, $keys...) must be a map"';
+  /* @return empty map if $map is empty */
+  expect: "()";
+  result: "()";
+  /* @return input $map if no $keys found or length($keys) == 0 */
+  expect: "(alpha: 1, beta: 2, gamma: 3)";
+  result: "(alpha: 1, beta: 2, gamma: 3)";
+  result: "(alpha: 1, beta: 2, gamma: 3)";
+  /* @return new map with found $keys removed */
+  expect: "(alpha: 1, gamma: 3)";
+  result: "(alpha: 1, gamma: 3)";
+  expect: "(alpha: 1)";
+  result: "(alpha: 1)";
+}

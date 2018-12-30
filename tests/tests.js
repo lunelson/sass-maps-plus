@@ -1,11 +1,8 @@
-// const fs = require('fs');
 const path = require('path');
-// const mm = require('micromatch');
 const writeFile = require('write');
 const globby = require('globby');
 const del = require('del');
 const test = require('ava');
-// const sass = require('sass');
 
 const compilers = {
   dartsass: require('sass'),
@@ -26,7 +23,7 @@ function sassRender(sass, file, outFile) {
   });
 }
 
-const srcFiles = globby.sync(['!**/_*', '!**/_*/**', '*.scss'], { cwd: __dirname });
+const srcFiles = globby.sync(['*.scss', '!**/_*', '!**/_*/**'], { cwd: __dirname });
 const outFiles = globby.sync(['*.css'], { cwd: path.resolve(__dirname, 'renders') });
 
 const delFiles = outFiles

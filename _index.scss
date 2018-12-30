@@ -8,7 +8,7 @@
 ///                                          |_|              |_|
 
 /////////////////////////////////////////////
-////////////////// private //////////////////
+///////////////// (private) /////////////////
 /////////////////////////////////////////////
 
 @function --smp-str-times($str, $n: 1) {
@@ -35,7 +35,7 @@
 }
 
 /////////////////////////////////////////////
-/////////////////// public //////////////////
+///////////////// map-invert ////////////////
 /////////////////////////////////////////////
 
 @function map-invert($map) {
@@ -49,12 +49,13 @@
   @return $result;
 }
 
+/////////////////////////////////////////////
+////////////////// map-pick /////////////////
+/////////////////////////////////////////////
+
 @function map-pick($map, $keys...) {
   @if not --smp-is-map($map) {
     @return error('argument `$map` of map-pick($map, $keys...) must be a map');
-  }
-  @if length($keys) == 0 {
-    @return error('rest-argument $keys in map-pick($map, $keys...) not provided');
   }
   $nots: ();
   @each $key in map-keys($map) {
@@ -63,12 +64,14 @@
   @return map-remove($map, $nots...);
 }
 
+/////////////////////////////////////////////
+////////////////// map-omit /////////////////
+/////////////////////////////////////////////
+
 @function map-omit($map, $keys...) {
+  @if length($map) == 0 { @return (); }
   @if not --smp-is-map($map) {
     @return error('argument `$map` of map-omit($map, $keys...) must be a map');
-  }
-  @if length($keys) == 0 {
-    @return error('rest-argument $keys in map-omit($map, $keys...) not provided');
   }
   @return map-remove($map, $keys...);
 }
