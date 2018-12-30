@@ -1,15 +1,10 @@
-- rename the functions
-    sass-maps-plus
-      map-get-n
-      map-set-n
-      map-merge-n
-      map-pretty-print
-- move old aliases to _deprecated
 - refer to other solutions
   https://css-tricks.com/snippets/sass/deep-getset-maps/
   sassymaps
   sassdash get()
+
 - other solutions imitate lodash' approach; problem is that maps are maps, not objects, and that supplying a list as a means of retrieving nested keys is in conflict with the fact that in a map a list may also be a key
+
 - merge forward, the descriptions from sass-list-maps
 
 - re: the function syntax

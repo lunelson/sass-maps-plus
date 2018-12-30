@@ -1,9 +1,0 @@
-@function map-omit($map, $keys...) {
-  @if type-of($map) != 'map' {
-    @return error('argument $map in map-omit($map, $keys...) is not a map');
-  }
-  @if length($keys) == 0 {
-    @return error('rest-argument $keys in map-omit($map, $keys...) not provided');
-  }
-  @return map-remove($map, $keys...);
-}

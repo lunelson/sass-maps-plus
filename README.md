@@ -1,6 +1,6 @@
 # sass-maps-plus
 
-!['sass maps'](sass-maps-plus.png)
+!['sass maps'](assets/sass-maps-plus.png)
 
 [![npm published v](https://img.shields.io/npm/v/@lunelson/sass-maps-plus.svg)]()
 [![Build Status](https://travis-ci.org/lunelson/sass-maps-plus.svg?branch=master)](https://travis-ci.org/lunelson/sass-maps-plus)
