@@ -1,5 +1,5 @@
 @import '@lunelson/sass-throw/index';
-$sass-throw-catch: true;
+$throw-catch: true;
 
 /////////////////////////////////////////////
 ////////////////// private //////////////////
@@ -32,7 +32,7 @@ $sass-throw-catch: true;
 
 @function map-invert($map) {
   @if type-of($map) != 'map' {
-    @return error('argument $map in map-invert($map) is not a map');
+    @return throw-error('argument $map in map-invert($map) is not a map');
   }
   $result: ();
   @each $key, $value in $map {
@@ -43,10 +43,10 @@ $sass-throw-catch: true;
 
 @function map-pick($map, $keys...) {
   @if type-of($map) != 'map' {
-    @return error('argument $map in map-pick($map, $keys...) is not a map');
+    @return throw-error('argument $map in map-pick($map, $keys...) is not a map');
   }
   @if length($keys) == 0 {
-    @return error('rest-argument $keys in map-pick($map, $keys...) not provided');
+    @return throw-error('rest-argument $keys in map-pick($map, $keys...) not provided');
   }
   $nots: ();
   @each $key in map-keys($map) {
@@ -57,20 +57,20 @@ $sass-throw-catch: true;
 
 @function map-omit($map, $keys...) {
   @if type-of($map) != 'map' {
-    @return error('argument $map in map-omit($map, $keys...) is not a map');
+    @return throw-error('argument $map in map-omit($map, $keys...) is not a map');
   }
   @if length($keys) == 0 {
-    @return error('rest-argument $keys in map-omit($map, $keys...) not provided');
+    @return throw-error('rest-argument $keys in map-omit($map, $keys...) not provided');
   }
   @return map-remove($map, $keys...);
 }
 
 @function map-get-nested($map, $keys...) {
   @if type-of($map) != 'map' {
-    @return error('argument $map in map-get-nested($map, $keys...) is not a map');
+    @return throw-error('argument $map in map-get-nested($map, $keys...) is not a map');
   }
   @if length($keys) == 0 {
-    @return error('rest-argument $keys in map-get-nested($map, $keys...) not provided');
+    @return throw-error('rest-argument $keys in map-get-nested($map, $keys...) not provided');
   }
   @each $key in $keys {
     @if $map == null { @return $map; }
@@ -81,10 +81,10 @@ $sass-throw-catch: true;
 
 @function map-merge-nested($map, $keys-and-value...) {
   @if type-of($map) != 'map' {
-    @return error('argument $map in map-merge-nested($map, $keys...) is not a map');
+    @return throw-error('argument $map in map-merge-nested($map, $keys...) is not a map');
   }
   @if length($keys-and-value) == 0 {
-    @return error('rest-argument $keys-and-value in map-merge-nested($map, $keys-and-value...) not provided');
+    @return throw-error('rest-argument $keys-and-value in map-merge-nested($map, $keys-and-value...) not provided');
   }
   $keys-and-value-length: length($keys-and-value);
   $key-length: $keys-and-value-length - 1;
@@ -106,10 +106,10 @@ $sass-throw-catch: true;
 
 @function map-set-nested($map, $keys-and-value...) {
   @if type-of($map) != 'map' {
-    @return error('argument $map in map-set-nested($map, $keys...) is not a map');
+    @return throw-error('argument $map in map-set-nested($map, $keys...) is not a map');
   }
   @if length($keys-and-value) == 0 {
-    @return error('rest-argument $keys-and-value in map-set-nested($map, $keys-and-value...) not provided');
+    @return throw-error('rest-argument $keys-and-value in map-set-nested($map, $keys-and-value...) not provided');
   }
   $keys-and-value-length: length($keys-and-value);
   $key-length: $keys-and-value-length - 1;
@@ -117,7 +117,7 @@ $sass-throw-catch: true;
   $value-is-map: type-of($value) == 'map';
 
   @if $key-length == 0 {
-    @return error('at least one $key required in map-set-nested($map, $keys-and-value...)');
+    @return throw-error('at least one $key required in map-set-nested($map, $keys-and-value...)');
   } @else {
     @for $i from 1 through $key-length {
       $new: (nth($keys-and-value, $keys-and-value-length - $i): $value);

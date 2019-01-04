@@ -40,7 +40,7 @@
 
 @function map-invert($map) {
   @if not --smp-is-map($map) {
-    @return error('argument `$map` of map-invert($map) must be a map');
+    @return throw-error('argument `$map` of map-invert($map) must be a map');
   }
   $result: ();
   @each $key, $value in $map {
@@ -55,7 +55,7 @@
 
 @function map-pick($map, $keys...) {
   @if not --smp-is-map($map) {
-    @return error('argument `$map` of map-pick($map, $keys...) must be a map');
+    @return throw-error('argument `$map` of map-pick($map, $keys...) must be a map');
   }
   $nots: ();
   @each $key in map-keys($map) {
@@ -71,7 +71,7 @@
 @function map-omit($map, $keys...) {
   @if length($map) == 0 { @return (); }
   @if not --smp-is-map($map) {
-    @return error('argument `$map` of map-omit($map, $keys...) must be a map');
+    @return throw-error('argument `$map` of map-omit($map, $keys...) must be a map');
   }
   @return map-remove($map, $keys...);
 }
@@ -86,10 +86,10 @@ $native-map-get: get-function('map-get');
 @function map-get($map, $keys...) {
   @if length($map) == 0 { @return null; }
   @if not --smp-is-map($map) {
-    @return error('argument `$map` of `map-get($map, $keys...)` must be a map');
+    @return throw-error('argument `$map` of `map-get($map, $keys...)` must be a map');
   }
   @if length($keys) == 0 {
-    @return error('function `map-get($map, $keys...)` is missing rest-argument `$keys`');
+    @return throw-error('function `map-get($map, $keys...)` is missing rest-argument `$keys`');
   }
   @each $key in $keys {
     // @if $map == null { @return $map; }
@@ -108,16 +108,16 @@ $native-map-merge: get-function('map-merge');
 
 @function map-merge($map1, $keys-and-map2...) {
   @if not --smp-is-map($map1) {
-    @return error('argument `$map1` of `map-merge($map1, $keys-and-map2...)` must be a map');
+    @return throw-error('argument `$map1` of `map-merge($map1, $keys-and-map2...)` must be a map');
   }
   @if length($keys-and-map2) == 0 {
-    @return error('rest-argument `$keys-and-map2...` of map-merge($map1, $keys-and-map2...) is missing');
+    @return throw-error('rest-argument `$keys-and-map2...` of map-merge($map1, $keys-and-map2...) is missing');
   }
   $keys-and-map2-length: length($keys-and-map2);
   $key-length: $keys-and-map2-length - 1;
   $map2: nth($keys-and-map2, $keys-and-map2-length);
   @if not --smp-is-map($map2) {
-    @return error('argument `$map2` of `map-merge($map1, $keys-and-map2...)` must be a map');
+    @return throw-error('argument `$map2` of `map-merge($map1, $keys-and-map2...)` must be a map');
   }
   @if $key-length == 0 {
     $map2: native-map-merge($map1, $map2);
@@ -139,16 +139,16 @@ $native-map-merge: get-function('map-merge');
 
 @function map-set($map, $keys-and-value...) {
   @if not --smp-is-map($map) {
-    @return error('argument `$map` of `map-set($map, $keys...)` is not a map');
+    @return throw-error('argument `$map` of `map-set($map, $keys...)` is not a map');
   }
   @if length($keys-and-value) == 0 {
-    @return error('rest-argument `$keys-and-value` of `map-set($map, $keys-and-value...)` is missing');
+    @return throw-error('rest-argument `$keys-and-value` of `map-set($map, $keys-and-value...)` is missing');
   }
   $keys-and-value-length: length($keys-and-value);
   $key-length: $keys-and-value-length - 1;
   $value: nth($keys-and-value, $keys-and-value-length);
   @if $key-length == 0 {
-    @return error('at least one `$key` argument required in `map-set($map, $keys-and-value...)`');
+    @return throw-error('at least one `$key` argument required in `map-set($map, $keys-and-value...)`');
   } @else {
     @for $i from 1 through $key-length {
       $new: (nth($keys-and-value, $keys-and-value-length - $i): $value);
